@@ -54,4 +54,43 @@ describe Board do
       end
     end
   end
+
+  describe '#win?' do
+    context 'when a row has connected four' do
+      it 'returns true' do
+        allow(board).to receive(:row_has_connected_four?).and_return(true)
+        expect(board.win?).to be true
+      end
+    end
+
+    context 'when a column has connected four' do
+      it 'returns true' do
+        allow(board).to receive(:column_has_connected_four?).and_return(true)
+        expect(board.win?).to be true
+      end
+    end
+
+    context 'when a diagonal has connected four' do
+      it 'returns true' do
+        allow(board).to receive(:diagonal_has_connected_four?).and_return(true)
+        expect(board.win?).to be true
+      end
+    end
+
+    context 'when the board is empty' do
+      it 'returns false' do
+        allow(board).to receive(:board_empty?).and_return(true)
+        expect(board.win?).to be false
+      end
+    end
+
+    context 'when no connected four found' do
+      it 'returns false' do
+        allow(board).to receive(:row_has_connected_four?).and_return(false)
+        allow(board).to receive(:column_has_connected_four?).and_return(false)
+        allow(board).to receive(:diagonal_has_connected_four?).and_return(false)
+        expect(board.win?).to be false
+      end
+    end
+  end
 end
