@@ -93,4 +93,27 @@ describe Board do
       end
     end
   end
+
+  describe '#draw?' do
+    context 'when the board is full' do
+      it 'returns true' do
+        allow(board).to receive(:board_full?).and_return(true)
+        expect(board.draw?).to be true
+      end
+    end
+
+    context 'when the board is empty' do
+      it 'returns false' do
+        allow(board).to receive(:board_full?).and_return(false)
+        expect(board.draw?).to be false
+      end
+    end
+
+    context 'when the board is neither empty nor full' do
+      it 'returns false' do
+        allow(board).to receive(:board_full?).and_return(false)
+        expect(board.draw?).to be false
+      end
+    end
+  end
 end

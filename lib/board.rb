@@ -23,7 +23,13 @@ class Board
     false
   end
 
-  def draw?; end
+  def draw?
+    return true if board_full?
+
+    false
+  end
+
+  def board_full?; end
 
   def board_empty?; end
 
