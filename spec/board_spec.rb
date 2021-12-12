@@ -286,7 +286,7 @@ describe Board do
       end
     end
 
-    context 'when last changed column not met the condition (positive)' do
+    context 'when last changed column not met the index condition (positive)' do
       it 'returns false' do
         board.instance_variable_set(:@board, full_board)
         board.instance_variable_set(:@last_changed_row, 3)
@@ -295,7 +295,7 @@ describe Board do
       end
     end
 
-    context 'when last changed column not met the condition (negative)' do
+    context 'when last changed column not met the index condition (negative)' do
       it 'returns false' do
         board.instance_variable_set(:@board, full_board)
         board.instance_variable_set(:@last_changed_row, 3)
@@ -369,7 +369,7 @@ describe Board do
       end
     end
 
-    context 'when last changed row not met the condition' do
+    context 'when last changed row not met the index condition' do
       it 'returns false' do
         board.instance_variable_set(:@last_changed_row, 5)
         expect(board.column_has_connected_four?).to be false
@@ -459,7 +459,7 @@ describe Board do
       end
     end
 
-    context 'when top right condition not met' do
+    context 'when top right condition not met the index condition' do
       it 'returns false' do
         board.instance_variable_set(:@last_changed_row, 0)
         board.instance_variable_set(:@last_changed_column, 4)
@@ -469,7 +469,7 @@ describe Board do
       end
     end
 
-    context 'when top left condition not met' do
+    context 'when top left condition not met the index condition' do
       it 'returns false' do
         board.instance_variable_set(:@last_changed_row, 0)
         board.instance_variable_set(:@last_changed_column, 0)
@@ -479,7 +479,7 @@ describe Board do
       end
     end
 
-    context 'when bottom right condition not met' do
+    context 'when bottom right condition not met the index condition' do
       it 'returns false' do
         board.instance_variable_set(:@last_changed_row, 3)
         board.instance_variable_set(:@last_changed_column, 0)
@@ -489,7 +489,7 @@ describe Board do
       end
     end
 
-    context 'when bottom left condition not met' do
+    context 'when bottom left condition not met the index condition' do
       it 'returns false' do
         board.instance_variable_set(:@last_changed_row, 3)
         board.instance_variable_set(:@last_changed_column, 4)

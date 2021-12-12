@@ -40,6 +40,10 @@ class Board
     row_has_connected_four? || column_has_connected_four? || diagonal_has_connected_four?
   end
 
+  def draw?
+    board_full?
+  end
+
   def row_has_connected_four?
     row_right_connected_four? || row_left_connected_four?
   end
@@ -58,10 +62,6 @@ class Board
 
   def diagonal_has_connected_four?
     top_diagonal_connected_four? || bottom_diagonal_connected_four?
-  end
-
-  def draw?
-    board_full?
   end
 
   def board_empty?
