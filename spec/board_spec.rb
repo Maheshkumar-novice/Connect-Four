@@ -284,6 +284,24 @@ describe Board do
         expect(board.row_has_connected_four?).to be false
       end
     end
+
+    context 'when last changed column not met the condition (positive)' do
+      it 'returns false' do
+        board.instance_variable_set(:@board, full_board)
+        board.instance_variable_set(:@last_changed_row, 3)
+        board.instance_variable_set(:@last_changed_column, 5)
+        expect(board.row_has_connected_four?).to be false
+      end
+    end
+
+    context 'when last changed column not met the condition (negative)' do
+      it 'returns false' do
+        board.instance_variable_set(:@board, full_board)
+        board.instance_variable_set(:@last_changed_row, 3)
+        board.instance_variable_set(:@last_changed_column, 0)
+        expect(board.row_has_connected_four?).to be false
+      end
+    end
   end
 
   describe '#column_has_connected_four?' do
@@ -346,6 +364,13 @@ describe Board do
         board.instance_variable_set(:@board, full_board)
         board.instance_variable_set(:@last_changed_row, 2)
         board.instance_variable_set(:@last_changed_column, 3)
+        expect(board.column_has_connected_four?).to be false
+      end
+    end
+
+    context 'when last changed row not met the condition' do
+      it 'returns false' do
+        board.instance_variable_set(:@last_changed_row, 5)
         expect(board.column_has_connected_four?).to be false
       end
     end
