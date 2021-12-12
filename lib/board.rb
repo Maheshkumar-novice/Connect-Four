@@ -6,7 +6,10 @@ class Board
   attr_reader :board
 
   def initialize
-    @board = Array.new(7) { Array.new(6, '') }
+    @board = Array.new(6) { Array.new(7, '') }
+    @last_changed_column = nil
+    @last_changed_row = nil
+    @column_to_rows_mapping = Hash.new { |hash, key| hash[key] = (0..5).to_a }
   end
 
   def game_over?
@@ -31,7 +34,35 @@ class Board
     board.flatten.none?(&:empty?)
   end
 
-  def row_has_connected_four?; end
+  def row_has_connected_four?
+    return false if board_empty?
+
+    row_right_connected_four? || row_left_connected_four?
+  end
+
+  def row_right_connected_four?
+    return false if @last_changed_column + 3 > 6
+
+    values = [
+      board[@last_changed_row][@last_changed_column],
+      board[@last_changed_row][@last_changed_column + 1],
+      board[@last_changed_row][@last_changed_column + 2],
+      board[@last_changed_row][@last_changed_column + 3]
+    ]
+    values.all? { |value| value == values[0] }
+  end
+
+  def row_left_connected_four?
+    return false if (@last_changed_column - 3).negative?
+
+    values = [
+      board[@last_changed_row][@last_changed_column],
+      board[@last_changed_row][@last_changed_column - 1],
+      board[@last_changed_row][@last_changed_column - 2],
+      board[@last_changed_row][@last_changed_column - 3]
+    ]
+    values.all? { |value| value == values[0] }
+  end
 
   def column_has_connected_four?; end
 

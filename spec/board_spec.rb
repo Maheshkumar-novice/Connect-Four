@@ -5,6 +5,26 @@ require_relative '../lib/board'
 
 describe Board do
   subject(:board) { described_class.new }
+  let(:half_board) do
+    [
+      ['', :red, '', '', '', :red, ''],
+      [:red, '', '', '', :red, :red, :red],
+      ['', '', '', '', '', '', ''],
+      %i[red red red red red red red],
+      ['', :red, '', :red, '', :red, ''],
+      [:red, :red, :red, '', '', '', :red]
+    ]
+  end
+  let(:full_board) do
+    [
+      %i[red red red red red red red],
+      %i[red red red red red red red],
+      %i[red red red red red red red],
+      %i[red red red red red red red],
+      %i[red red red red red red red],
+      %i[red red red red red red red]
+    ]
+  end
 
   describe '#initialize' do
     matcher :be_empty do
@@ -62,6 +82,7 @@ describe Board do
     context 'when a column has connected four' do
       it 'returns true' do
         allow(board).to receive(:board_empty?).and_return(false)
+        allow(board).to receive(:row_has_connected_four?).and_return(false)
         allow(board).to receive(:column_has_connected_four?).and_return(true)
         expect(board.win?).to be true
       end
@@ -70,6 +91,7 @@ describe Board do
     context 'when a diagonal has connected four' do
       it 'returns true' do
         allow(board).to receive(:board_empty?).and_return(false)
+        allow(board).to receive(:row_has_connected_four?).and_return(false)
         allow(board).to receive(:diagonal_has_connected_four?).and_return(true)
         expect(board.win?).to be true
       end
@@ -124,30 +146,14 @@ describe Board do
 
     context 'when the board is full' do
       it 'returns false' do
-        value = [
-          %i[red red red red red red red],
-          %i[red red red red red red red],
-          %i[red red red red red red red],
-          %i[red red red red red red red],
-          %i[red red red red red red red],
-          %i[red red red red red red red]
-        ]
-        board.instance_variable_set(:@board, value)
+        board.instance_variable_set(:@board, full_board)
         expect(board.board_empty?).to be false
       end
     end
 
     context 'when the board is neither empty nor full' do
       it 'returns false' do
-        value = [
-          ['', :red, '', '', '', :red, ''],
-          [:red, '', '', '', :red, :red, :red],
-          ['', '', '', '', '', '', ''],
-          %i[red red red red red red red],
-          ['', :red, '', :red, '', :red, ''],
-          [:red, :red, :red, '', '', '', :red]
-        ]
-        board.instance_variable_set(:@board, value)
+        board.instance_variable_set(:@board, half_board)
         expect(board.board_empty?).to be false
       end
     end
@@ -162,31 +168,150 @@ describe Board do
 
     context 'when the board is full' do
       it 'returns true' do
-        value = [
-          %i[red red red red red red red],
-          %i[red red red red red red red],
-          %i[red red red red red red red],
-          %i[red red red red red red red],
-          %i[red red red red red red red],
-          %i[red red red red red red red]
-        ]
-        board.instance_variable_set(:@board, value)
+        board.instance_variable_set(:@board, full_board)
         expect(board.board_full?).to be true
       end
     end
 
     context 'when the board is neither empty nor full' do
       it 'returns false' do
+        board.instance_variable_set(:@board, half_board)
+        expect(board.board_full?).to be false
+      end
+    end
+  end
+
+  describe '#row_has_connected_four?' do
+    context 'when top right row has connected four' do
+      it 'returns true' do
         value = [
-          ['', :red, '', '', '', :red, ''],
-          [:red, '', '', '', :red, :red, :red],
+          ['', '', '', :red, :red, :red, :red],
           ['', '', '', '', '', '', ''],
-          %i[red red red red red red red],
-          ['', :red, '', :red, '', :red, ''],
-          [:red, :red, :red, '', '', '', :red]
+          ['', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', '']
+
         ]
         board.instance_variable_set(:@board, value)
-        expect(board.board_full?).to be false
+        board.instance_variable_set(:@last_changed_row, 0)
+        board.instance_variable_set(:@last_changed_column, 3)
+        expect(board.row_has_connected_four?).to be true
+      end
+    end
+
+    context 'when top left row has connected four' do
+      it 'returns true' do
+        value = [
+          [:red, :red, :red, :red, '', '', ''],
+          ['', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', '']
+
+        ]
+        board.instance_variable_set(:@board, value)
+        board.instance_variable_set(:@last_changed_row, 0)
+        board.instance_variable_set(:@last_changed_column, 3)
+        expect(board.row_has_connected_four?).to be true
+      end
+    end
+
+    context 'when middle right row has connected four' do
+      it 'returns true' do
+        value = [
+          ['', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', ''],
+          ['', '', '', :red, :red, :red, :red],
+          ['', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', '']
+
+        ]
+        board.instance_variable_set(:@board, value)
+        board.instance_variable_set(:@last_changed_row, 2)
+        board.instance_variable_set(:@last_changed_column, 3)
+        expect(board.row_has_connected_four?).to be true
+      end
+    end
+
+    context 'when middle left row has connected four' do
+      it 'returns true' do
+        value = [
+          ['', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', ''],
+          [:red, :red, :red, :red, '', '', ''],
+          ['', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', '']
+
+        ]
+        board.instance_variable_set(:@board, value)
+        board.instance_variable_set(:@last_changed_row, 2)
+        board.instance_variable_set(:@last_changed_column, 3)
+        expect(board.row_has_connected_four?).to be true
+      end
+    end
+
+    context 'when bottom right row has connected four' do
+      it 'returns true' do
+        value = [
+          ['', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', ''],
+          ['', '', '', :red, :red, :red, :red]
+
+        ]
+        board.instance_variable_set(:@board, value)
+        board.instance_variable_set(:@last_changed_row, 5)
+        board.instance_variable_set(:@last_changed_column, 3)
+        expect(board.row_has_connected_four?).to be true
+      end
+    end
+
+    context 'when bottom left row has connected four' do
+      it 'returns true' do
+        value = [
+          ['', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', ''],
+          [:red, :red, :red, :red, '', '', '']
+
+        ]
+        board.instance_variable_set(:@board, value)
+        board.instance_variable_set(:@last_changed_row, 5)
+        board.instance_variable_set(:@last_changed_column, 3)
+        expect(board.row_has_connected_four?).to be true
+      end
+    end
+
+    context 'when the board is empty' do
+      it 'returns false' do
+        allow(board).to receive(:board_empty?).and_return(true)
+        expect(board.row_has_connected_four?).to be false
+      end
+    end
+
+    context 'when no connected four found' do
+      it 'returns false' do
+        value = [
+          ['', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', ''],
+          ['', '', :blue, '', '', '', ''],
+          ['', '', :red, '', '', '', ''],
+          %i[blue red blue red blue red blue],
+          %i[red blue blue red red blue blue]
+
+        ]
+        board.instance_variable_set(:@board, value)
+        board.instance_variable_set(:@last_changed_row, 3)
+        board.instance_variable_set(:@last_changed_column, 2)
+        expect(board.row_has_connected_four?).to be false
       end
     end
   end
