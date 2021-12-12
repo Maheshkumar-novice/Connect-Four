@@ -19,17 +19,21 @@ class Board
     row_has_connected_four? || column_has_connected_four? || diagonal_has_connected_four?
   end
 
-  def board_empty?; end
+  def draw?
+    board_full?
+  end
+
+  def board_empty?
+    board.flatten.all?(&:empty?)
+  end
+
+  def board_full?
+    board.flatten.none?(&:empty?)
+  end
 
   def row_has_connected_four?; end
 
   def column_has_connected_four?; end
 
   def diagonal_has_connected_four?; end
-
-  def draw?
-    board_full?
-  end
-
-  def board_full?; end
 end

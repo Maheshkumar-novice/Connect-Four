@@ -53,6 +53,7 @@ describe Board do
   describe '#win?' do
     context 'when a row has connected four' do
       it 'returns true' do
+        allow(board).to receive(:board_empty?).and_return(false)
         allow(board).to receive(:row_has_connected_four?).and_return(true)
         expect(board.win?).to be true
       end
@@ -60,6 +61,7 @@ describe Board do
 
     context 'when a column has connected four' do
       it 'returns true' do
+        allow(board).to receive(:board_empty?).and_return(false)
         allow(board).to receive(:column_has_connected_four?).and_return(true)
         expect(board.win?).to be true
       end
@@ -67,6 +69,7 @@ describe Board do
 
     context 'when a diagonal has connected four' do
       it 'returns true' do
+        allow(board).to receive(:board_empty?).and_return(false)
         allow(board).to receive(:diagonal_has_connected_four?).and_return(true)
         expect(board.win?).to be true
       end
@@ -108,6 +111,82 @@ describe Board do
       it 'returns false' do
         allow(board).to receive(:board_full?).and_return(false)
         expect(board.draw?).to be false
+      end
+    end
+  end
+
+  describe '#board_empty?' do
+    context 'when the board is empty' do
+      it 'returns true' do
+        expect(board.board_empty?).to be true
+      end
+    end
+
+    context 'when the board is full' do
+      it 'returns false' do
+        value = [
+          %i[red red red red red red red],
+          %i[red red red red red red red],
+          %i[red red red red red red red],
+          %i[red red red red red red red],
+          %i[red red red red red red red],
+          %i[red red red red red red red]
+        ]
+        board.instance_variable_set(:@board, value)
+        expect(board.board_empty?).to be false
+      end
+    end
+
+    context 'when the board is neither empty nor full' do
+      it 'returns false' do
+        value = [
+          ['', :red, '', '', '', :red, ''],
+          [:red, '', '', '', :red, :red, :red],
+          ['', '', '', '', '', '', ''],
+          %i[red red red red red red red],
+          ['', :red, '', :red, '', :red, ''],
+          [:red, :red, :red, '', '', '', :red]
+        ]
+        board.instance_variable_set(:@board, value)
+        expect(board.board_empty?).to be false
+      end
+    end
+  end
+
+  describe '#board_full?' do
+    context 'when the board is empty' do
+      it 'returns false' do
+        expect(board.board_full?).to be false
+      end
+    end
+
+    context 'when the board is full' do
+      it 'returns true' do
+        value = [
+          %i[red red red red red red red],
+          %i[red red red red red red red],
+          %i[red red red red red red red],
+          %i[red red red red red red red],
+          %i[red red red red red red red],
+          %i[red red red red red red red]
+        ]
+        board.instance_variable_set(:@board, value)
+        expect(board.board_full?).to be true
+      end
+    end
+
+    context 'when the board is neither empty nor full' do
+      it 'returns false' do
+        value = [
+          ['', :red, '', '', '', :red, ''],
+          [:red, '', '', '', :red, :red, :red],
+          ['', '', '', '', '', '', ''],
+          %i[red red red red red red red],
+          ['', :red, '', :red, '', :red, ''],
+          [:red, :red, :red, '', '', '', :red]
+        ]
+        board.instance_variable_set(:@board, value)
+        expect(board.board_full?).to be false
       end
     end
   end
