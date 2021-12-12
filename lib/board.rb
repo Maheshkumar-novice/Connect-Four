@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/AbcSize
+# rubocop:disable Metrics/AbcSize, Metrics/ClassLength
 # board class
 class Board
   attr_reader :board
@@ -39,7 +39,9 @@ class Board
     values.all? { |value| value == values[0] }
   end
 
-  def diagonal_has_connected_four?; end
+  def diagonal_has_connected_four?
+    top_diagonal_connected_four? || bottom_diagonal_connected_four?
+  end
 
   def draw?
     board_full?
@@ -78,5 +80,61 @@ class Board
     ]
     values.all? { |value| value == values[0] }
   end
+
+  def top_diagonal_connected_four?
+    top_right_diagonal_connected_four? || top_left_diagonal_connected_four?
+  end
+
+  def top_right_diagonal_connected_four?
+    return false if (@last_changed_row - 3).negative? || (@last_changed_column + 3) > 6
+
+    values = [
+      board[@last_changed_row][@last_changed_column],
+      board[@last_changed_row - 1][@last_changed_column + 1],
+      board[@last_changed_row - 2][@last_changed_column + 2],
+      board[@last_changed_row - 3][@last_changed_column + 3]
+    ]
+    values.all? { |value| value == values[0] }
+  end
+
+  def top_left_diagonal_connected_four?
+    return false if (@last_changed_row - 3).negative? || (@last_changed_column - 3).negative?
+
+    values = [
+      board[@last_changed_row][@last_changed_column],
+      board[@last_changed_row - 1][@last_changed_column - 1],
+      board[@last_changed_row - 2][@last_changed_column - 2],
+      board[@last_changed_row - 3][@last_changed_column - 3]
+    ]
+    values.all? { |value| value == values[0] }
+  end
+
+  def bottom_diagonal_connected_four?
+    bottom_right_diagonal_connected_four? || bottom_left_diagonal_connected_four?
+  end
+
+  def bottom_right_diagonal_connected_four?
+    return false if (@last_changed_row + 3) > 5 || (@last_changed_column + 3) > 6
+
+    values = [
+      board[@last_changed_row][@last_changed_column],
+      board[@last_changed_row + 1][@last_changed_column + 1],
+      board[@last_changed_row + 2][@last_changed_column + 2],
+      board[@last_changed_row + 3][@last_changed_column + 3]
+    ]
+    values.all? { |value| value == values[0] }
+  end
+
+  def bottom_left_diagonal_connected_four?
+    return false if (@last_changed_row + 3) > 5 || (@last_changed_column - 3).negative?
+
+    values = [
+      board[@last_changed_row][@last_changed_column],
+      board[@last_changed_row + 1][@last_changed_column - 1],
+      board[@last_changed_row + 2][@last_changed_column - 2],
+      board[@last_changed_row + 3][@last_changed_column - 3]
+    ]
+    values.all? { |value| value == values[0] }
+  end
 end
-# rubocop:enable Metrics/AbcSize
+# rubocop:enable Metrics/AbcSize, Metrics/ClassLength
