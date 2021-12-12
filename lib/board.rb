@@ -25,6 +25,11 @@ class Board
     move.match?(/^[0-6]{1}$/)
   end
 
+  def result
+    return :win if win?
+    return :draw if draw?
+  end
+
   def game_over?
     win? || draw?
   end

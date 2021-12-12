@@ -578,4 +578,29 @@ describe Board do
       end
     end
   end
+
+  describe '#result' do
+    context 'when a win occurs' do
+      it 'returns :win' do
+        allow(board).to receive(:win?).and_return(true)
+        expect(board.result).to eq(:win)
+      end
+    end
+
+    context 'when a draw occurs' do
+      it 'returns :draw' do
+        allow(board).to receive(:win?).and_return(false)
+        allow(board).to receive(:draw?).and_return(true)
+        expect(board.result).to eq(:draw)
+      end
+    end
+
+    context 'when neither win nor draw occurs' do
+      it 'returns nil' do
+        allow(board).to receive(:win?).and_return(false)
+        allow(board).to receive(:draw?).and_return(false)
+        expect(board.result).to be_nil
+      end
+    end
+  end
 end
