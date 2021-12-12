@@ -20,11 +20,6 @@ describe Board do
       board_slots_count = board.board.flatten.size
       expect(board_slots_count).to be(42)
     end
-
-    it 'creates an instance variable last_moved_piece with nil value' do
-      last_moved_piece = board.last_moved_piece
-      expect(last_moved_piece).to be_nil
-    end
   end
 
   describe '#game_over?' do
