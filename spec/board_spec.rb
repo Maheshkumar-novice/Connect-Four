@@ -75,9 +75,10 @@ describe Board do
     end
 
     context 'when a diagonal has connected four' do
-      xit 'returns true' do
+      it 'returns true' do
         allow(board).to receive(:board_empty?).and_return(false)
         allow(board).to receive(:row_has_connected_four?).and_return(false)
+        allow(board).to receive(:column_has_connected_four?).and_return(false)
         allow(board).to receive(:diagonal_has_connected_four?).and_return(true)
         expect(board.win?).to be true
       end
@@ -495,6 +496,62 @@ describe Board do
         allow(board).to receive(:top_diagonal_connected_four?).and_return(false)
         allow(board).to receive(:bottom_left_diagonal_connected_four?).and_return(false)
         expect(board.diagonal_has_connected_four?).to be false
+      end
+    end
+  end
+
+  describe '#add_disc' do
+    context 'when adding to an empty column' do
+      it 'adds the disc to the column' do
+        column = 0
+        disc = p1_marker
+        board.add_disc(column, disc)
+        row = board.instance_variable_get(:@last_changed_row)
+        expect(board.board[row][column]).to eq(disc)
+      end
+    end
+
+    context 'when adding to a partially filled column' do
+      it 'adds the disc to the column' do
+        column = 6
+        disc = p1_marker
+        value = [
+          ['', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', p1_marker],
+          ['', '', '', '', '', '', p1_marker],
+          ['', '', '', '', '', '', p1_marker],
+          ['', '', '', '', '', '', p1_marker]
+        ]
+        board.instance_variable_set(:@board, value)
+        map = board.instance_variable_get(:@column_to_rows_mapping)
+        map[6] = [0, 1]
+        board.instance_variable_set(:@column_to_rows_mapping, map)
+        board.add_disc(column, disc)
+        row = board.instance_variable_get(:@last_changed_row)
+        expect(board.board[row][column]).to eq(disc)
+      end
+    end
+
+    context 'when adding to an already filled column' do
+      it 'column stays unchanged' do
+        column = 6
+        disc = p1_marker
+        value = [
+          ['', '', '', '', '', '', p2_marker],
+          ['', '', '', '', '', '', p1_marker],
+          ['', '', '', '', '', '', p1_marker],
+          ['', '', '', '', '', '', p1_marker],
+          ['', '', '', '', '', '', p1_marker],
+          ['', '', '', '', '', '', p1_marker]
+        ]
+        board.instance_variable_set(:@board, value)
+        map = board.instance_variable_get(:@column_to_rows_mapping)
+        map[6] = []
+        board.instance_variable_set(:@column_to_rows_mapping, map)
+        board.add_disc(column, disc)
+        row = 0
+        expect(board.board[row][column]).to eq(p2_marker)
       end
     end
   end

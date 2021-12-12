@@ -13,6 +13,14 @@ class Board
     @column_to_rows_mapping = Hash.new { |hash, key| hash[key] = (0..5).to_a }
   end
 
+  def add_disc(column, disc)
+    return if @column_to_rows_mapping[column].empty?
+
+    @last_changed_row = @column_to_rows_mapping[column].pop
+    @last_changed_column = column
+    board[@last_changed_row][column] = disc
+  end
+
   def game_over?
     win? || draw?
   end
