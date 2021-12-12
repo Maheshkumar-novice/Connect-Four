@@ -555,4 +555,27 @@ describe Board do
       end
     end
   end
+
+  describe '#valid_move?' do
+    context 'when the move is a string of length more than 1' do
+      it 'returns false' do
+        move = '1s'
+        expect(board.valid_move?(move)).to be false
+      end
+    end
+
+    context 'when the move is an out of bound value' do
+      it 'returns false' do
+        move = '8'
+        expect(board.valid_move?(move)).to be false
+      end
+    end
+
+    context 'when the move is a valid value' do
+      it 'returns true' do
+        move = '0'
+        expect(board.valid_move?(move)).to be true
+      end
+    end
+  end
 end

@@ -21,6 +21,10 @@ class Board
     board[@last_changed_row][column] = disc
   end
 
+  def valid_move?(move)
+    move.match?(/^[0-6]{1}$/)
+  end
+
   def game_over?
     win? || draw?
   end
