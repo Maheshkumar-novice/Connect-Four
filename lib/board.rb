@@ -22,6 +22,16 @@ class Board
     row_has_connected_four? || column_has_connected_four? || diagonal_has_connected_four?
   end
 
+  def row_has_connected_four?
+    return false if board_empty?
+
+    row_right_connected_four? || row_left_connected_four?
+  end
+
+  def column_has_connected_four?; end
+
+  def diagonal_has_connected_four?; end
+
   def draw?
     board_full?
   end
@@ -34,11 +44,9 @@ class Board
     board.flatten.none?(&:empty?)
   end
 
-  def row_has_connected_four?
-    return false if board_empty?
+  private
 
-    row_right_connected_four? || row_left_connected_four?
-  end
+  # rubocop:disable Metrics/AbcSize
 
   def row_right_connected_four?
     return false if @last_changed_column + 3 > 6
@@ -64,7 +72,5 @@ class Board
     values.all? { |value| value == values[0] }
   end
 
-  def column_has_connected_four?; end
-
-  def diagonal_has_connected_four?; end
+  # rubocop:enable Metrics/AbcSize
 end

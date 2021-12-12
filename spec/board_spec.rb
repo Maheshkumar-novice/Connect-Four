@@ -5,41 +5,27 @@ require_relative '../lib/board'
 
 describe Board do
   subject(:board) { described_class.new }
+  let(:p1_marker) { :red }
+  let(:p2_marker) { :blue }
   let(:half_board) do
     [
-      ['', :red, '', '', '', :red, ''],
-      [:red, '', '', '', :red, :red, :red],
       ['', '', '', '', '', '', ''],
-      %i[red red red red red red red],
-      ['', :red, '', :red, '', :red, ''],
-      [:red, :red, :red, '', '', '', :red]
+      ['', '', '', '', '', '', ''],
+      ['', '', '', '', '', '', ''],
+      [p1_marker, p2_marker, p1_marker, '', '', '', ''],
+      [p2_marker, p1_marker, p2_marker, '', '', '', ''],
+      [p1_marker, p2_marker, p2_marker, p1_marker, p2_marker, p1_marker, p2_marker]
     ]
   end
   let(:full_board) do
     [
-      %i[red red red red red red red],
-      %i[red red red red red red red],
-      %i[red red red red red red red],
-      %i[red red red red red red red],
-      %i[red red red red red red red],
-      %i[red red red red red red red]
+      [p2_marker, p1_marker, p2_marker, p1_marker, p2_marker, p1_marker, p2_marker],
+      [p1_marker, p2_marker, p1_marker, p2_marker, p1_marker, p1_marker, p1_marker],
+      [p2_marker, p1_marker, p1_marker, p1_marker, p2_marker, p2_marker, p2_marker],
+      [p1_marker, p2_marker, p2_marker, p1_marker, p1_marker, p1_marker, p1_marker],
+      [p2_marker, p1_marker, p2_marker, p1_marker, p2_marker, p2_marker, p2_marker],
+      [p1_marker, p2_marker, p1_marker, p2_marker, p2_marker, p1_marker, p1_marker]
     ]
-  end
-
-  describe '#initialize' do
-    matcher :be_empty do
-      match { |value| value == '' }
-    end
-
-    it 'creates an array with empty strings' do
-      board_slots = board.board.flatten
-      expect(board_slots).to all(be_empty)
-    end
-
-    it 'creates an array of length 42' do
-      board_slots_count = board.board.flatten.size
-      expect(board_slots_count).to be(42)
-    end
   end
 
   describe '#game_over?' do
@@ -185,7 +171,7 @@ describe Board do
     context 'when top right row has connected four' do
       it 'returns true' do
         value = [
-          ['', '', '', :red, :red, :red, :red],
+          ['', '', '', p1_marker, p1_marker, p1_marker, p1_marker],
           ['', '', '', '', '', '', ''],
           ['', '', '', '', '', '', ''],
           ['', '', '', '', '', '', ''],
@@ -203,7 +189,7 @@ describe Board do
     context 'when top left row has connected four' do
       it 'returns true' do
         value = [
-          [:red, :red, :red, :red, '', '', ''],
+          [p1_marker, p1_marker, p1_marker, p1_marker, '', '', ''],
           ['', '', '', '', '', '', ''],
           ['', '', '', '', '', '', ''],
           ['', '', '', '', '', '', ''],
@@ -223,7 +209,7 @@ describe Board do
         value = [
           ['', '', '', '', '', '', ''],
           ['', '', '', '', '', '', ''],
-          ['', '', '', :red, :red, :red, :red],
+          ['', '', '', p1_marker, p1_marker, p1_marker, p1_marker],
           ['', '', '', '', '', '', ''],
           ['', '', '', '', '', '', ''],
           ['', '', '', '', '', '', '']
@@ -241,7 +227,7 @@ describe Board do
         value = [
           ['', '', '', '', '', '', ''],
           ['', '', '', '', '', '', ''],
-          [:red, :red, :red, :red, '', '', ''],
+          [p1_marker, p1_marker, p1_marker, p1_marker, '', '', ''],
           ['', '', '', '', '', '', ''],
           ['', '', '', '', '', '', ''],
           ['', '', '', '', '', '', '']
@@ -262,7 +248,7 @@ describe Board do
           ['', '', '', '', '', '', ''],
           ['', '', '', '', '', '', ''],
           ['', '', '', '', '', '', ''],
-          ['', '', '', :red, :red, :red, :red]
+          ['', '', '', p1_marker, p1_marker, p1_marker, p1_marker]
 
         ]
         board.instance_variable_set(:@board, value)
@@ -280,7 +266,7 @@ describe Board do
           ['', '', '', '', '', '', ''],
           ['', '', '', '', '', '', ''],
           ['', '', '', '', '', '', ''],
-          [:red, :red, :red, :red, '', '', '']
+          [p1_marker, p1_marker, p1_marker, p1_marker, '', '', '']
 
         ]
         board.instance_variable_set(:@board, value)
@@ -299,16 +285,7 @@ describe Board do
 
     context 'when no connected four found' do
       it 'returns false' do
-        value = [
-          ['', '', '', '', '', '', ''],
-          ['', '', '', '', '', '', ''],
-          ['', '', :blue, '', '', '', ''],
-          ['', '', :red, '', '', '', ''],
-          %i[blue red blue red blue red blue],
-          %i[red blue blue red red blue blue]
-
-        ]
-        board.instance_variable_set(:@board, value)
+        board.instance_variable_set(:@board, full_board)
         board.instance_variable_set(:@last_changed_row, 3)
         board.instance_variable_set(:@last_changed_column, 2)
         expect(board.row_has_connected_four?).to be false
