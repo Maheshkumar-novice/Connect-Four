@@ -72,6 +72,10 @@ class Board
     board.flatten.none?(&:empty?)
   end
 
+  def print_board
+    pp board
+  end
+
   private
 
   def row_right_connected_four?
