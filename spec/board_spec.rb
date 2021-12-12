@@ -75,7 +75,7 @@ describe Board do
     end
 
     context 'when a diagonal has connected four' do
-      it 'returns true' do
+      xit 'returns true' do
         allow(board).to receive(:board_empty?).and_return(false)
         allow(board).to receive(:row_has_connected_four?).and_return(false)
         allow(board).to receive(:diagonal_has_connected_four?).and_return(true)
@@ -276,19 +276,77 @@ describe Board do
       end
     end
 
-    context 'when the board is empty' do
-      it 'returns false' do
-        allow(board).to receive(:board_empty?).and_return(true)
-        expect(board.row_has_connected_four?).to be false
-      end
-    end
-
     context 'when no connected four found' do
       it 'returns false' do
         board.instance_variable_set(:@board, full_board)
         board.instance_variable_set(:@last_changed_row, 3)
         board.instance_variable_set(:@last_changed_column, 2)
         expect(board.row_has_connected_four?).to be false
+      end
+    end
+  end
+
+  describe '#column_has_connected_four?' do
+    context 'when first column has connect four' do
+      it 'returns true' do
+        value = [
+          ['', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', ''],
+          [p1_marker, '', '', '', '', '', ''],
+          [p1_marker, '', '', '', '', '', ''],
+          [p1_marker, '', '', '', '', '', ''],
+          [p1_marker, '', '', '', '', '', '']
+
+        ]
+        board.instance_variable_set(:@board, value)
+        board.instance_variable_set(:@last_changed_row, 2)
+        board.instance_variable_set(:@last_changed_column, 0)
+        expect(board.column_has_connected_four?).to be true
+      end
+    end
+
+    context 'when last column has connect four' do
+      it 'returns true' do
+        value = [
+          ['', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', p1_marker],
+          ['', '', '', '', '', '', p1_marker],
+          ['', '', '', '', '', '', p1_marker],
+          ['', '', '', '', '', '', p1_marker]
+
+        ]
+        board.instance_variable_set(:@board, value)
+        board.instance_variable_set(:@last_changed_row, 2)
+        board.instance_variable_set(:@last_changed_column, 6)
+        expect(board.column_has_connected_four?).to be true
+      end
+    end
+
+    context 'when middle column has connect four' do
+      it 'returns true' do
+        value = [
+          ['', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', ''],
+          ['', '', '', p1_marker, '', '', ''],
+          ['', '', '', p1_marker, '', '', ''],
+          ['', '', '', p1_marker, '', '', ''],
+          ['', '', '', p1_marker, '', '', '']
+
+        ]
+        board.instance_variable_set(:@board, value)
+        board.instance_variable_set(:@last_changed_row, 2)
+        board.instance_variable_set(:@last_changed_column, 3)
+        expect(board.column_has_connected_four?).to be true
+      end
+    end
+
+    context 'when no connected four found' do
+      it 'returns false' do
+        board.instance_variable_set(:@board, full_board)
+        board.instance_variable_set(:@last_changed_row, 2)
+        board.instance_variable_set(:@last_changed_column, 3)
+        expect(board.column_has_connected_four?).to be false
       end
     end
   end

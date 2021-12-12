@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/AbcSize
 # board class
 class Board
   attr_reader :board
@@ -23,12 +24,20 @@ class Board
   end
 
   def row_has_connected_four?
-    return false if board_empty?
-
     row_right_connected_four? || row_left_connected_four?
   end
 
-  def column_has_connected_four?; end
+  def column_has_connected_four?
+    return false if @last_changed_row + 3 > 5
+
+    values = [
+      board[@last_changed_row][@last_changed_column],
+      board[@last_changed_row + 1][@last_changed_column],
+      board[@last_changed_row + 2][@last_changed_column],
+      board[@last_changed_row + 3][@last_changed_column]
+    ]
+    values.all? { |value| value == values[0] }
+  end
 
   def diagonal_has_connected_four?; end
 
@@ -45,8 +54,6 @@ class Board
   end
 
   private
-
-  # rubocop:disable Metrics/AbcSize
 
   def row_right_connected_four?
     return false if @last_changed_column + 3 > 6
@@ -71,6 +78,5 @@ class Board
     ]
     values.all? { |value| value == values[0] }
   end
-
-  # rubocop:enable Metrics/AbcSize
 end
+# rubocop:enable Metrics/AbcSize
