@@ -18,6 +18,8 @@ describe Game do
     before do
       allow(player1).to receive(:name=)
       allow(player1).to receive(:marker=)
+      allow(game).to receive(:create_player_name).and_return('hello')
+      allow(game).to receive(:create_player_marker).and_return(':red')
     end
 
     it 'sends message to player 1 to update name' do
@@ -35,6 +37,8 @@ describe Game do
     before do
       allow(player2).to receive(:name=)
       allow(player2).to receive(:marker=)
+      allow(game).to receive(:create_player_name).and_return('hello')
+      allow(game).to receive(:create_player_marker).and_return(':red')
     end
 
     it 'sends message to player 1 to update name' do
@@ -89,6 +93,53 @@ describe Game do
         name = game.create_player_name
         expect(name).to eq('hell fury')
         game.create_player_name
+      end
+    end
+  end
+
+  describe '#create_player_marker' do
+    before do
+      allow(game).to receive(:print).with('> ')
+      allow(game).to receive(:list_markers)
+    end
+
+    context 'when invalid marker given as input' do
+      context 'when invalid marker given twice and a valid input given' do
+        before do
+          allow(game).to receive(:gets).and_return('', '', ':red')
+          allow(game.instance_variable_get(:@markers)).to receive(:include?).and_return(false, false, true)
+        end
+
+        it 'shows error message twice' do
+          expect(game).to receive(:puts).with('Invalid Symbol!').twice
+          game.create_player_marker
+        end
+
+        it 'returns the valid symbol' do
+          allow(game).to receive(:puts)
+          symbol = game.create_player_marker
+          expect(symbol).to eq(':red')
+          game.create_player_marker
+        end
+      end
+    end
+
+    context 'when a valid marker given as input' do
+      before do
+        allow(game).to receive(:gets).and_return(':red')
+        allow(game.instance_variable_get(:@markers)).to receive(:include?).and_return(true)
+      end
+
+      it 'finishes execution without showing error message' do
+        expect(game).not_to receive(:puts).with('Invalid Symbol!')
+        game.create_player_marker
+      end
+
+      it 'returns the valid symbol' do
+        allow(game).to receive(:puts)
+        symbol = game.create_player_marker
+        expect(symbol).to eq(':red')
+        game.create_player_marker
       end
     end
   end
