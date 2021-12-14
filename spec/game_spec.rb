@@ -194,6 +194,7 @@ describe Game do
   describe '#game_loop' do
     before do
       allow(game).to receive(:current_player_data)
+      allow(board).to receive(:print_board)
       allow(board).to receive(:add_disc)
     end
 

@@ -47,25 +47,38 @@ class Game
     move.to_i
   end
 
-  def introduction; end
+  def introduction
+    puts <<~INTRO
+      Connect Four!
+    INTRO
+  end
 
-  def current_player_data; end
+  def current_player_data
+    puts @current_player.name.to_s
+    puts @current_player.marker.to_s
+  end
 
-  def announce_result; end
+  def announce_result
+    puts @board.result.to_s
+  end
 
   def update_player_data
     update_player1_data
+    @markers.delete(@player1.marker.to_s)
     update_player2_data
   end
 
   def update_player1_data
+    puts 'Enter Name > '
     @player1.name = create_player_name
+    puts 'Enter Marker > '
     @player1.marker = create_player_marker
   end
 
   def update_player2_data
+    puts 'Enter Name > '
     @player2.name = create_player_name
-    @markers.delete(@player1.marker.to_s)
+    puts 'Enter Marker > '
     @player2.marker = create_player_marker
   end
 
