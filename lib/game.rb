@@ -31,6 +31,10 @@ class Game
     end
   end
 
+  def switch_players
+    @current_player, @other_player = @other_player, @current_player
+  end
+
   def move
     move = gets.chomp
     until @board.valid_move?(move)

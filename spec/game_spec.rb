@@ -181,4 +181,13 @@ describe Game do
       end
     end
   end
+
+  describe '#switch_players' do
+    it 'switches players' do
+      prev_players = [game.instance_variable_get(:@current_player), game.instance_variable_get(:@other_player)]
+      game.switch_players
+      new_players = [game.instance_variable_get(:@current_player), game.instance_variable_get(:@other_player)]
+      expect(new_players).to eq(prev_players.reverse)
+    end
+  end
 end
