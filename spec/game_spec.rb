@@ -143,4 +143,42 @@ describe Game do
       end
     end
   end
+
+  describe '#move' do
+    before do
+      allow(game).to receive(:print)
+    end
+
+    context 'when invalid move given as input' do
+      context 'when invalid move given twice and then a valid move as input' do
+        before do
+          allow(game).to receive(:gets).and_return('s', 'y', '6')
+          allow(board).to receive(:valid_move?).and_return(false, false, true)
+        end
+
+        it 'shows error message twice' do
+          expect(game).to receive(:puts).with('Invalid Move!').twice
+          game.move
+        end
+
+        it 'returns the valid move' do
+          allow(game).to receive(:puts)
+          move = game.move
+          expect(move).to eq(6)
+        end
+      end
+    end
+
+    context 'when valid move given as input' do
+      before do
+        allow(game).to receive(:gets).and_return('6')
+        allow(board).to receive(:valid_move?).and_return(true)
+      end
+
+      it 'returns the valid move' do
+        move = game.move
+        expect(move).to eq(6)
+      end
+    end
+  end
 end

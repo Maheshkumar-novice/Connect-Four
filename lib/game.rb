@@ -14,6 +14,39 @@ class Game
     @markers = [':red', ':blue', ':green', ':yellow']
   end
 
+  def play
+    introduction
+    update_player_data
+    game_loop
+    announce_result
+  end
+
+  def game_loop
+    loop do
+      current_player_data
+      board.add_disc(move)
+      break if board.game_over?
+
+      switch_players
+    end
+  end
+
+  def move
+    move = gets.chomp
+    until @board.valid_move?(move)
+      puts 'Invalid Move!'
+      print '> '
+      move = gets.chomp
+    end
+    move.to_i
+  end
+
+  def introduction; end
+
+  def current_player_data; end
+
+  def announce_result; end
+
   def update_player_data
     update_player1_data
     update_player2_data
