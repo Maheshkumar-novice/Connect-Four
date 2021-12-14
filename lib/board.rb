@@ -22,7 +22,7 @@ class Board
   end
 
   def valid_move?(move)
-    move.match?(/^[0-6]{1}$/)
+    move.match?(/^[0-6]{1}$/) && !@column_to_rows_mapping[move.to_i].empty?
   end
 
   def result

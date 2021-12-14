@@ -577,6 +577,16 @@ describe Board do
         expect(board.valid_move?(move)).to be true
       end
     end
+
+    context 'when the column is full' do
+      it 'returns false' do
+        move = '0'
+        map = board.instance_variable_get(:@column_to_rows_mapping)
+        map[0] = []
+        board.instance_variable_set(:@column_to_rows_mapping, map)
+        expect(board.valid_move?(move)).to be false
+      end
+    end
   end
 
   describe '#result' do
