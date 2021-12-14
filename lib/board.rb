@@ -1,9 +1,13 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+require_relative './display'
+
 # rubocop:disable Metrics/AbcSize, Metrics/ClassLength
 # board class
 class Board
+  include Display
+
   attr_reader :board
 
   def initialize
@@ -70,10 +74,6 @@ class Board
 
   def board_full?
     board.flatten.none?(&:empty?)
-  end
-
-  def print_board
-    pp board
   end
 
   private

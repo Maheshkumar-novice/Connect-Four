@@ -3,15 +3,18 @@
 
 require_relative './board'
 require_relative './player'
+require_relative './display'
 
 # class game
 class Game
+  include Display
+
   def initialize(player1 = Player.new, player2 = Player.new, board = Board.new)
     @player1 = player1
     @player2 = player2
     @board = board
     @current_player, @other_player = [@player1, @player2].shuffle
-    @markers = [':red', ':blue', ':green', ':yellow']
+    @markers = %w[red blue green yellow]
   end
 
   def play
@@ -24,8 +27,10 @@ class Game
 
   def game_loop
     loop do
-      current_player_data
+      print_current_player_data
       @board.print_board
+      print_column_number_prompt
+      print_prompt
       @board.add_disc(move, @current_player.marker)
       break if @board.game_over?
 
@@ -40,22 +45,11 @@ class Game
   def move
     move = gets.chomp
     until @board.valid_move?(move)
-      puts 'Invalid Move!'
-      print '> '
+      print_invalid('move')
+      print_prompt
       move = gets.chomp
     end
     move.to_i
-  end
-
-  def introduction
-    puts <<~INTRO
-      Connect Four!
-    INTRO
-  end
-
-  def current_player_data
-    puts @current_player.name.to_s
-    puts @current_player.marker.to_s
   end
 
   def announce_result
@@ -64,29 +58,33 @@ class Game
 
   def update_player_data
     update_player1_data
-    @markers.delete(@player1.marker.to_s)
+    remove_player1_marker_from_list
     update_player2_data
   end
 
+  def remove_player1_marker_from_list
+    @markers.delete(@player1.marker.to_s)
+  end
+
   def update_player1_data
-    puts 'Enter Name > '
+    player1_name_prompt
     @player1.name = create_player_name
-    puts 'Enter Marker > '
+    player1_marker_prompt
     @player1.marker = create_player_marker
   end
 
   def update_player2_data
-    puts 'Enter Name > '
+    player2_name_prompt
     @player2.name = create_player_name
-    puts 'Enter Marker > '
+    player2_marker_prompt
     @player2.marker = create_player_marker
   end
 
   def create_player_name
     name = gets.chomp
     until @player1.valid_name?(name)
-      puts 'Invalid Name!'
-      print '> '
+      print_invalid('name')
+      print_prompt
       name = gets.chomp
     end
     name
@@ -96,14 +94,10 @@ class Game
     list_markers
     marker = gets.chomp
     until @markers.include?(marker)
-      puts 'Invalid Symbol!'
-      print '> '
+      print_invalid('symbol')
+      print_prompt
       marker = gets.chomp
     end
     marker
-  end
-
-  def list_markers
-    pp @markers
   end
 end
