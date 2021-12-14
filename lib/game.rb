@@ -6,7 +6,7 @@ require_relative './player'
 
 # class game
 class Game
-  def initialize(player1, player2, board)
+  def initialize(player1 = Player.new, player2 = Player.new, board = Board.new)
     @player1 = player1
     @player2 = player2
     @board = board
@@ -18,12 +18,14 @@ class Game
     introduction
     update_player_data
     game_loop
+    @board.print_board
     announce_result
   end
 
   def game_loop
     loop do
       current_player_data
+      @board.print_board
       @board.add_disc(move, @current_player.marker)
       break if @board.game_over?
 
@@ -63,6 +65,7 @@ class Game
 
   def update_player2_data
     @player2.name = create_player_name
+    @markers.delete(@player1.marker.to_s)
     @player2.marker = create_player_marker
   end
 
