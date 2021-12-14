@@ -190,4 +190,49 @@ describe Game do
       expect(new_players).to eq(prev_players.reverse)
     end
   end
+
+  describe '#game_loop' do
+    before do
+      allow(game).to receive(:current_player_data)
+      allow(board).to receive(:add_disc)
+    end
+
+    context 'when game is over after two moves' do
+      before do
+        allow(game).to receive(:move).and_return(6)
+        allow(board).to receive(:game_over?).and_return(false, true)
+        allow(player1).to receive(:marker)
+        allow(player2).to receive(:marker)
+      end
+
+      it 'sends message add_disc to board twice' do
+        expect(board).to receive(:add_disc).twice
+        game.game_loop
+      end
+
+      it 'sends message to switch_players once' do
+        expect(game).to receive(:switch_players).once
+        game.game_loop
+      end
+    end
+
+    context 'when game is over after current move' do
+      before do
+        allow(game).to receive(:move).and_return(6)
+        allow(board).to receive(:game_over?).and_return(true)
+        allow(player1).to receive(:marker)
+        allow(player2).to receive(:marker)
+      end
+
+      it 'sends message add_disc to board once' do
+        expect(board).to receive(:add_disc).once
+        game.game_loop
+      end
+
+      it 'doesnt send message to switch_players' do
+        expect(game).not_to receive(:switch_players)
+        game.game_loop
+      end
+    end
+  end
 end

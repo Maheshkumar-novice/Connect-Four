@@ -24,8 +24,8 @@ class Game
   def game_loop
     loop do
       current_player_data
-      board.add_disc(move)
-      break if board.game_over?
+      @board.add_disc(move, @current_player.marker)
+      break if @board.game_over?
 
       switch_players
     end
