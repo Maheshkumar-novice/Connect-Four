@@ -33,7 +33,7 @@ class Game
   end
 
   def remove_player1_marker_from_list
-    @markers.delete(@player1.marker.to_s)
+    @markers.delete(@player1.marker)
   end
 
   def update_player1_data

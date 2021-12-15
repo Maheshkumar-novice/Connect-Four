@@ -4,7 +4,7 @@
 require_relative './display'
 
 # rubocop:disable Metrics/AbcSize, Metrics/ClassLength
-# board class
+# Connect Four Board
 class Board
   include Display
 
@@ -27,11 +27,6 @@ class Board
 
   def valid_move?(move)
     move.match?(/^[0-6]{1}$/) && !@column_to_rows_mapping[move.to_i].empty?
-  end
-
-  def result
-    return :win if win?
-    return :draw if draw?
   end
 
   def game_over?
@@ -74,6 +69,11 @@ class Board
 
   def board_full?
     board.flatten.none?(&:empty?)
+  end
+
+  def result
+    return :win if win?
+    return :draw if draw?
   end
 
   private
