@@ -60,7 +60,7 @@ module Display
   def list_markers
     puts <<~MARKERS
 
-      #{@markers.map(&:to_sym).map { |color| color_text(color.to_s, color) }.join(' ')}
+      #{@markers.map(&:to_sym).map { |color| color_text(color.to_s.capitalize, color) }.join(' ')}
 
     MARKERS
     print_prompt
@@ -84,7 +84,7 @@ module Display
     puts <<~PLAYER
 
 
-      #{color_text(@current_player.name, :green)}(#{color_text(@current_player.marker, @current_player.marker.to_sym)})'s move
+      #{color_text(@current_player.name, :green)}(#{color_text(@current_player.marker.capitalize, @current_player.marker.to_sym)})'s move:
 
     PLAYER
   end

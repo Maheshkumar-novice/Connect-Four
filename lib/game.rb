@@ -63,12 +63,12 @@ class Game
   def create_player_marker
     list_markers
     marker = gets.chomp
-    until @markers.include?(marker)
+    until @markers.include?(marker.downcase)
       print_invalid('marker')
       print_prompt
       marker = gets.chomp
     end
-    marker
+    marker.downcase
   end
 
   def game_loop
