@@ -64,7 +64,7 @@ class Game
     list_markers
     marker = gets.chomp
     until @markers.include?(marker)
-      print_invalid('symbol')
+      print_invalid('marker')
       print_prompt
       marker = gets.chomp
     end

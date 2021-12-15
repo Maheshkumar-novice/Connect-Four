@@ -18,6 +18,8 @@ describe Game do
     before do
       allow(player1).to receive(:name=)
       allow(player1).to receive(:marker=)
+      allow(game).to receive(:player1_name_prompt)
+      allow(game).to receive(:player1_marker_prompt)
       allow(game).to receive(:create_player_name).and_return('hello')
       allow(game).to receive(:create_player_marker).and_return(':red')
     end
@@ -37,6 +39,8 @@ describe Game do
     before do
       allow(player2).to receive(:name=)
       allow(player2).to receive(:marker=)
+      allow(game).to receive(:player2_name_prompt)
+      allow(game).to receive(:player2_marker_prompt)
       allow(game).to receive(:create_player_name).and_return('hello')
       allow(game).to receive(:create_player_marker).and_return(':red')
     end
@@ -54,7 +58,7 @@ describe Game do
 
   describe '#create_player_name' do
     before do
-      allow(game).to receive(:print).with('> ')
+      allow(game).to receive(:print_prompt)
     end
 
     context 'when the invalid name given as input' do
@@ -65,12 +69,12 @@ describe Game do
         end
 
         it 'shows error message twice' do
-          expect(game).to receive(:puts).with('Invalid Name!').twice
+          expect(game).to receive(:print_invalid).with('name').twice
           game.create_player_name
         end
 
         it 'returns the valid name' do
-          allow(game).to receive(:puts)
+          allow(game).to receive(:print_invalid)
           name = game.create_player_name
           expect(name).to eq('hell fury')
           game.create_player_name
@@ -85,11 +89,12 @@ describe Game do
       end
 
       it 'finishes execution without showing error message' do
-        expect(game).not_to receive(:puts).with('Invalid Name!')
+        expect(game).not_to receive(:print_invalid).with('name')
         game.create_player_name
       end
 
       it 'returns the valid name' do
+        allow(game).to receive(:print_invalid)
         name = game.create_player_name
         expect(name).to eq('hell fury')
         game.create_player_name
@@ -99,26 +104,26 @@ describe Game do
 
   describe '#create_player_marker' do
     before do
-      allow(game).to receive(:print).with('> ')
+      allow(game).to receive(:print_prompt)
       allow(game).to receive(:list_markers)
     end
 
     context 'when invalid marker given as input' do
       context 'when invalid marker given twice and a valid input given' do
         before do
-          allow(game).to receive(:gets).and_return('', '', ':red')
+          allow(game).to receive(:gets).and_return('', '', 'red')
           allow(game.instance_variable_get(:@markers)).to receive(:include?).and_return(false, false, true)
         end
 
         it 'shows error message twice' do
-          expect(game).to receive(:puts).with('Invalid Symbol!').twice
+          expect(game).to receive(:print_invalid).with('marker').twice
           game.create_player_marker
         end
 
         it 'returns the valid symbol' do
-          allow(game).to receive(:puts)
+          allow(game).to receive(:print_invalid)
           symbol = game.create_player_marker
-          expect(symbol).to eq(':red')
+          expect(symbol).to eq('red')
           game.create_player_marker
         end
       end
@@ -126,19 +131,19 @@ describe Game do
 
     context 'when a valid marker given as input' do
       before do
-        allow(game).to receive(:gets).and_return(':red')
+        allow(game).to receive(:gets).and_return('red')
         allow(game.instance_variable_get(:@markers)).to receive(:include?).and_return(true)
       end
 
       it 'finishes execution without showing error message' do
-        expect(game).not_to receive(:puts).with('Invalid Symbol!')
+        expect(game).not_to receive(:print_invalid).with('marker')
         game.create_player_marker
       end
 
       it 'returns the valid symbol' do
-        allow(game).to receive(:puts)
+        allow(game).to receive(:print_invalid)
         symbol = game.create_player_marker
-        expect(symbol).to eq(':red')
+        expect(symbol).to eq('red')
         game.create_player_marker
       end
     end
@@ -146,7 +151,7 @@ describe Game do
 
   describe '#move' do
     before do
-      allow(game).to receive(:print)
+      allow(game).to receive(:print_prompt)
     end
 
     context 'when invalid move given as input' do
@@ -157,12 +162,12 @@ describe Game do
         end
 
         it 'shows error message twice' do
-          expect(game).to receive(:puts).with('Invalid Move!').twice
+          expect(game).to receive(:print_invalid).with('move').twice
           game.move
         end
 
         it 'returns the valid move' do
-          allow(game).to receive(:puts)
+          allow(game).to receive(:print_invalid)
           move = game.move
           expect(move).to eq(6)
         end
@@ -193,7 +198,8 @@ describe Game do
 
   describe '#game_loop' do
     before do
-      allow(game).to receive(:current_player_data)
+      allow(game).to receive(:print_current_player_data)
+      allow(game).to receive(:print_column_number_prompt)
       allow(board).to receive(:print_board)
       allow(board).to receive(:add_disc)
     end
