@@ -7,6 +7,16 @@ require_relative './color'
 module Display
   include Color
 
+  def circles_map(symbol)
+    {
+      red: "\u{1f534}",
+      blue: "\u{1f535}",
+      green: "\u{1f7e2}",
+      yellow: "\u{1f7e1}",
+      white: "\u{26aa}"
+    }[symbol]
+  end
+
   def introduction
     puts <<~INTRO
 
@@ -18,6 +28,8 @@ module Display
 
     INTRO
   end
+
+  def rules; end
 
   def player1_name_prompt
     puts <<~NAME
@@ -35,6 +47,15 @@ module Display
     print_prompt
   end
 
+  def list_markers
+    puts <<~MARKERS
+
+      #{@markers.map(&:to_sym).map { |color| color_text(color.to_s, color) }.join(' ')}
+
+    MARKERS
+    print_prompt
+  end
+
   def player1_marker_prompt
     puts <<~MARKER
 
@@ -49,14 +70,6 @@ module Display
     MARKER
   end
 
-  def print_prompt
-    print "\e[0;1;34;94m: \e[0m"
-  end
-
-  def print_invalid(string)
-    puts color_text("Invalid #{string.capitalize}!\n", :red)
-  end
-
   def print_current_player_data
     puts <<~PLAYER
 
@@ -67,22 +80,11 @@ module Display
   end
 
   def print_column_number_prompt
-    puts 'Enter a Column number (0-6)'
-  end
+    puts <<~COLUMN
 
-  def list_markers
-    puts "\n#{@markers.map(&:to_sym).map { |color| color_text(color.to_s, color) }.join(' ')}\n\n"
+      [0;1;35;95mEn[0;1;31;91mte[0;1;33;93mr[0m [0;1;32;92ma[0m [0;1;36;96mCo[0;1;34;94mlu[0;1;35;95mmn[0m [0;1;31;91mn[0;1;33;93mum[0;1;32;92mbe[0;1;36;96mr[0m [0;1;34;94m(0[0;1;35;95m-6[0;1;31;91m)[0m
+    COLUMN
     print_prompt
-  end
-
-  def circles_map(symbol)
-    {
-      red: "\u{1f534}",
-      blue: "\u{1f535}",
-      green: "\u{1f7e2}",
-      yellow: "\u{1f7e2}",
-      white: "\u{26aa}"
-    }[symbol]
   end
 
   def print_board
@@ -92,7 +94,31 @@ module Display
 
         circles_map(element.to_sym)
       end
-      print "\n#{printable_row.join(' ')}\n"
+      print <<~ROW
+        #{printable_row.join(' ')}
+      ROW
     end
+  end
+
+  def announce_winner(player)
+    puts <<~WINNER
+
+      #{color_text("#{player.name} won!", :green)}
+    WINNER
+  end
+
+  def announce_draw
+    puts <<~DRAW
+
+      #{color_text("It's Draw!", :yellow)}
+    DRAW
+  end
+
+  def print_invalid(string)
+    puts color_text("Invalid #{string.capitalize}!\n", :red)
+  end
+
+  def print_prompt
+    print "\e[0;1;34;94m: \e[0m"
   end
 end

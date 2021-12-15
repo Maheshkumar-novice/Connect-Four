@@ -19,41 +19,11 @@ class Game
 
   def play
     introduction
+    rules
     update_player_data
     game_loop
     @board.print_board
     announce_result
-  end
-
-  def game_loop
-    loop do
-      print_current_player_data
-      @board.print_board
-      print_column_number_prompt
-      print_prompt
-      @board.add_disc(move, @current_player.marker)
-      break if @board.game_over?
-
-      switch_players
-    end
-  end
-
-  def switch_players
-    @current_player, @other_player = @other_player, @current_player
-  end
-
-  def move
-    move = gets.chomp
-    until @board.valid_move?(move)
-      print_invalid('move')
-      print_prompt
-      move = gets.chomp
-    end
-    move.to_i
-  end
-
-  def announce_result
-    puts @board.result.to_s
   end
 
   def update_player_data
@@ -99,5 +69,38 @@ class Game
       marker = gets.chomp
     end
     marker
+  end
+
+  def game_loop
+    loop do
+      print_current_player_data
+      @board.print_board
+      print_column_number_prompt
+      @board.add_disc(move, @current_player.marker)
+      break if @board.game_over?
+
+      switch_players
+    end
+  end
+
+  def move
+    move = gets.chomp
+    until @board.valid_move?(move)
+      print_invalid('move')
+      print_prompt
+      move = gets.chomp
+    end
+    move.to_i
+  end
+
+  def switch_players
+    @current_player, @other_player = @other_player, @current_player
+  end
+
+  def announce_result
+    result = @board.result
+
+    announce_winner(@current_player) if result == :win
+    announce_draw if result == :draw
   end
 end
