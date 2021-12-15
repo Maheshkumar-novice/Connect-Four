@@ -17,8 +17,8 @@ class Board
     @column_to_rows_mapping = Hash.new { |hash, key| hash[key] = (0..5).to_a }
   end
 
-  def add_disc(column, disc)
-    column -= 1
+  def add_disc(move, disc)
+    column = move - 1
     return if @column_to_rows_mapping[column].empty?
 
     @last_changed_row = @column_to_rows_mapping[column].pop
