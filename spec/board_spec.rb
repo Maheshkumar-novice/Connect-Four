@@ -633,8 +633,8 @@ describe Board do
       it 'returns false' do
         board.instance_variable_set(:@last_changed_row, 0)
         board.instance_variable_set(:@last_changed_column, 4)
-        allow(board).to receive(:bottom_diagonal_connected_four?).and_return(false)
-        allow(board).to receive(:top_left_diagonal_connected_four?).and_return(false)
+        allow(board).to receive(:bottom_diagonal_has_connected_four?).and_return(false)
+        allow(board).to receive(:top_left_diagonal_has_connected_four?).and_return(false)
         allow(board).to receive(:top_middle_diagonal_has_connected_four?).and_return(false)
         expect(board.diagonal_has_connected_four?).to be false
       end
@@ -644,8 +644,8 @@ describe Board do
       it 'returns false' do
         board.instance_variable_set(:@last_changed_row, 0)
         board.instance_variable_set(:@last_changed_column, 0)
-        allow(board).to receive(:bottom_diagonal_connected_four?).and_return(false)
-        allow(board).to receive(:top_right_diagonal_connected_four?).and_return(false)
+        allow(board).to receive(:bottom_diagonal_has_connected_four?).and_return(false)
+        allow(board).to receive(:top_right_diagonal_has_connected_four?).and_return(false)
         allow(board).to receive(:top_middle_diagonal_has_connected_four?).and_return(false)
         expect(board.diagonal_has_connected_four?).to be false
       end
@@ -655,8 +655,8 @@ describe Board do
       it 'returns false' do
         board.instance_variable_set(:@last_changed_row, 3)
         board.instance_variable_set(:@last_changed_column, 0)
-        allow(board).to receive(:top_diagonal_connected_four?).and_return(false)
-        allow(board).to receive(:bottom_left_diagonal_connected_four?).and_return(false)
+        allow(board).to receive(:top_diagonal_has_connected_four?).and_return(false)
+        allow(board).to receive(:bottom_left_diagonal_has_connected_four?).and_return(false)
         allow(board).to receive(:bottom_middle_diagonal_has_connected_four?).and_return(false)
         expect(board.diagonal_has_connected_four?).to be false
       end
@@ -666,8 +666,8 @@ describe Board do
       it 'returns false' do
         board.instance_variable_set(:@last_changed_row, 3)
         board.instance_variable_set(:@last_changed_column, 4)
-        allow(board).to receive(:top_diagonal_connected_four?).and_return(false)
-        allow(board).to receive(:bottom_right_diagonal_connected_four?).and_return(false)
+        allow(board).to receive(:top_diagonal_has_connected_four?).and_return(false)
+        allow(board).to receive(:bottom_right_diagonal_has_connected_four?).and_return(false)
         allow(board).to receive(:bottom_middle_diagonal_has_connected_four?).and_return(false)
         expect(board.diagonal_has_connected_four?).to be false
       end
