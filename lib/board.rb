@@ -18,6 +18,7 @@ class Board
   end
 
   def add_disc(column, disc)
+    column -= 1
     return if @column_to_rows_mapping[column].empty?
 
     @last_changed_row = @column_to_rows_mapping[column].pop
@@ -26,7 +27,7 @@ class Board
   end
 
   def valid_move?(move)
-    move.match?(/^[0-6]{1}$/) && !@column_to_rows_mapping[move.to_i].empty?
+    move.match?(/^[1-7]{1}$/) && !@column_to_rows_mapping[move.to_i - 1].empty?
   end
 
   def game_over?

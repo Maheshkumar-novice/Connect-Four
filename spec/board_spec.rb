@@ -503,9 +503,10 @@ describe Board do
   describe '#add_disc' do
     context 'when adding to an empty column' do
       it 'adds the disc to the column' do
-        column = 0
+        move = 1
+        column = move - 1
         disc = p1_marker
-        board.add_disc(column, disc)
+        board.add_disc(move, disc)
         row = board.instance_variable_get(:@last_changed_row)
         expect(board.board[row][column]).to eq(disc)
       end
@@ -513,7 +514,8 @@ describe Board do
 
     context 'when adding to a partially filled column' do
       it 'adds the disc to the column' do
-        column = 6
+        move = 7
+        column = move - 1
         disc = p1_marker
         value = [
           ['', '', '', '', '', '', ''],
@@ -525,9 +527,9 @@ describe Board do
         ]
         board.instance_variable_set(:@board, value)
         map = board.instance_variable_get(:@column_to_rows_mapping)
-        map[6] = [0, 1]
+        map[column] = [0, 1]
         board.instance_variable_set(:@column_to_rows_mapping, map)
-        board.add_disc(column, disc)
+        board.add_disc(move, disc)
         row = board.instance_variable_get(:@last_changed_row)
         expect(board.board[row][column]).to eq(disc)
       end
@@ -535,7 +537,8 @@ describe Board do
 
     context 'when adding to an already filled column' do
       it 'column stays unchanged' do
-        column = 6
+        move = 7
+        column = move - 1
         disc = p1_marker
         value = [
           ['', '', '', '', '', '', p2_marker],
@@ -547,9 +550,9 @@ describe Board do
         ]
         board.instance_variable_set(:@board, value)
         map = board.instance_variable_get(:@column_to_rows_mapping)
-        map[6] = []
+        map[column] = []
         board.instance_variable_set(:@column_to_rows_mapping, map)
-        board.add_disc(column, disc)
+        board.add_disc(move, disc)
         row = 0
         expect(board.board[row][column]).to eq(p2_marker)
       end
@@ -573,14 +576,14 @@ describe Board do
 
     context 'when the move is a valid value' do
       it 'returns true' do
-        move = '0'
+        move = '1'
         expect(board.valid_move?(move)).to be true
       end
     end
 
     context 'when the column is full' do
       it 'returns false' do
-        move = '0'
+        move = '1'
         map = board.instance_variable_get(:@column_to_rows_mapping)
         map[0] = []
         board.instance_variable_set(:@column_to_rows_mapping, map)
