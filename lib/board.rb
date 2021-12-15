@@ -45,7 +45,7 @@ class Board
   end
 
   def row_has_connected_four?
-    row_right_connected_four? || row_left_connected_four?
+    row_right_connected_four? || row_middle_has_connected_four? || row_left_connected_four?
   end
 
   def column_has_connected_four?
@@ -91,6 +91,36 @@ class Board
     values.all? { |value| value == values[0] }
   end
 
+  def row_middle_has_connected_four?
+    row_middle_right_has_connected_four? || row_middle_left_has_connected_four?
+  end
+
+  def row_middle_right_has_connected_four?
+    return false if @last_changed_column + 2 > 6 || (@last_changed_column - 1).negative?
+
+    values = [
+      board[@last_changed_row][@last_changed_column - 1],
+      board[@last_changed_row][@last_changed_column],
+      board[@last_changed_row][@last_changed_column + 1],
+      board[@last_changed_row][@last_changed_column + 2]
+    ]
+
+    values.all? { |value| value == values[0] }
+  end
+
+  def row_middle_left_has_connected_four?
+    return false if @last_changed_column - 2 > 6 || (@last_changed_column + 1).negative?
+
+    values = [
+      board[@last_changed_row][@last_changed_column - 2],
+      board[@last_changed_row][@last_changed_column - 1],
+      board[@last_changed_row][@last_changed_column],
+      board[@last_changed_row][@last_changed_column + 1]
+    ]
+
+    values.all? { |value| value == values[0] }
+  end
+
   def row_left_connected_four?
     return false if (@last_changed_column - 3).negative?
 
@@ -104,7 +134,7 @@ class Board
   end
 
   def top_diagonal_connected_four?
-    top_right_diagonal_connected_four? || top_left_diagonal_connected_four?
+    top_right_diagonal_connected_four? || top_left_diagonal_connected_four? || top_middle_diagonal_has_connected_four?
   end
 
   def top_right_diagonal_connected_four?
@@ -115,6 +145,74 @@ class Board
       board[@last_changed_row - 1][@last_changed_column + 1],
       board[@last_changed_row - 2][@last_changed_column + 2],
       board[@last_changed_row - 3][@last_changed_column + 3]
+    ]
+    values.all? { |value| value == values[0] }
+  end
+
+  def top_middle_diagonal_has_connected_four?
+    top_right_middle_diagonal_has_connected_four? || top_left_middle_diagonal_has_connected_four?
+  end
+
+  def top_right_middle_diagonal_has_connected_four?
+    top_right_middle_right_has_connected_four? || top_right_middle_left_has_connected_four?
+  end
+
+  def top_right_middle_right_has_connected_four?
+    if (@last_changed_row - 2).negative? || (@last_changed_column + 2) > 6 || (@last_changed_row + 1) > 5 || (@last_changed_column - 1).negative?
+      return false
+    end
+
+    values = [
+      board[@last_changed_row + 1][@last_changed_column - 1],
+      board[@last_changed_row][@last_changed_column],
+      board[@last_changed_row - 1][@last_changed_column + 1],
+      board[@last_changed_row - 2][@last_changed_column + 2]
+    ]
+    values.all? { |value| value == values[0] }
+  end
+
+  def top_right_middle_left_has_connected_four?
+    if (@last_changed_row - 1).negative? || (@last_changed_column + 1) > 6 || (@last_changed_row + 2) > 5 || (@last_changed_column - 2).negative?
+      return false
+    end
+
+    values = [
+      board[@last_changed_row + 2][@last_changed_column - 2],
+      board[@last_changed_row + 1][@last_changed_column - 1],
+      board[@last_changed_row][@last_changed_column],
+      board[@last_changed_row - 1][@last_changed_column + 1]
+    ]
+    values.all? { |value| value == values[0] }
+  end
+
+  def top_left_middle_diagonal_has_connected_four?
+    top_left_middle_right_has_connected_four? || top_left_middle_left_has_connected_four?
+  end
+
+  def top_left_middle_right_has_connected_four?
+    if (@last_changed_row - 2).negative? || (@last_changed_column - 2).negative? || (@last_changed_row + 1) > 5 || (@last_changed_column + 1) > 6
+      return false
+    end
+
+    values = [
+      board[@last_changed_row + 1][@last_changed_column + 1],
+      board[@last_changed_row][@last_changed_column],
+      board[@last_changed_row - 1][@last_changed_column - 1],
+      board[@last_changed_row - 2][@last_changed_column - 2]
+    ]
+    values.all? { |value| value == values[0] }
+  end
+
+  def top_left_middle_left_has_connected_four?
+    if (@last_changed_row - 1).negative? || (@last_changed_column - 1).negative? || (@last_changed_row + 2) > 5 || (@last_changed_column + 2) > 6
+      return false
+    end
+
+    values = [
+      board[@last_changed_row + 1][@last_changed_column + 1],
+      board[@last_changed_row + 2][@last_changed_column + 2],
+      board[@last_changed_row][@last_changed_column],
+      board[@last_changed_row - 1][@last_changed_column - 1]
     ]
     values.all? { |value| value == values[0] }
   end
@@ -132,7 +230,7 @@ class Board
   end
 
   def bottom_diagonal_connected_four?
-    bottom_right_diagonal_connected_four? || bottom_left_diagonal_connected_four?
+    bottom_right_diagonal_connected_four? || bottom_left_diagonal_connected_four? || bottom_middle_diagonal_has_connected_four?
   end
 
   def bottom_right_diagonal_connected_four?
@@ -143,6 +241,74 @@ class Board
       board[@last_changed_row + 1][@last_changed_column + 1],
       board[@last_changed_row + 2][@last_changed_column + 2],
       board[@last_changed_row + 3][@last_changed_column + 3]
+    ]
+    values.all? { |value| value == values[0] }
+  end
+
+  def bottom_middle_diagonal_has_connected_four?
+    bottom_right_middle_diagonal_has_connected_four? || bottom_left_middle_diagonal_has_connected_four?
+  end
+
+  def bottom_right_middle_diagonal_has_connected_four?
+    bottom_right_middle_right_has_connected_four? || bottom_right_middle_left_has_connected_four?
+  end
+
+  def bottom_right_middle_right_has_connected_four?
+    if (@last_changed_row + 1) > 5 || (@last_changed_column + 1) > 6 || (@last_changed_row - 2).negative? || (@last_changed_column - 2).negative?
+      return false
+    end
+
+    values = [
+      board[@last_changed_row + 1][@last_changed_column + 1],
+      board[@last_changed_row][@last_changed_column],
+      board[@last_changed_row - 1][@last_changed_column - 1],
+      board[@last_changed_row - 2][@last_changed_column - 2]
+    ]
+    values.all? { |value| value == values[0] }
+  end
+
+  def bottom_right_middle_left_has_connected_four?
+    if (@last_changed_row + 2) > 5 || (@last_changed_column + 2) > 6 || (@last_changed_row - 1).negative? || (@last_changed_column - 1).negative?
+      return false
+    end
+
+    values = [
+      board[@last_changed_row + 2][@last_changed_column + 2],
+      board[@last_changed_row + 1][@last_changed_column + 1],
+      board[@last_changed_row][@last_changed_column],
+      board[@last_changed_row - 1][@last_changed_column - 1]
+    ]
+    values.all? { |value| value == values[0] }
+  end
+
+  def bottom_left_middle_diagonal_has_connected_four?
+    bottom_left_middle_right_has_connected_four? || bottom_left_middle_left_has_connected_four?
+  end
+
+  def bottom_left_middle_right_has_connected_four?
+    if (@last_changed_row + 1) > 5 || (@last_changed_column - 1).negative? || (@last_changed_row - 2).negative? || (@last_changed_column + 2) > 6
+      return false
+    end
+
+    values = [
+      board[@last_changed_row + 1][@last_changed_column - 1],
+      board[@last_changed_row][@last_changed_column],
+      board[@last_changed_row - 1][@last_changed_column + 1],
+      board[@last_changed_row - 2][@last_changed_column + 2]
+    ]
+    values.all? { |value| value == values[0] }
+  end
+
+  def bottom_left_middle_left_has_connected_four?
+    if (@last_changed_row + 2) > 5 || (@last_changed_column - 2).negative? || (@last_changed_row - 1).negative? || (@last_changed_column + 1) > 6
+      return false
+    end
+
+    values = [
+      board[@last_changed_row + 1][@last_changed_column - 1],
+      board[@last_changed_row + 2][@last_changed_column - 2],
+      board[@last_changed_row][@last_changed_column],
+      board[@last_changed_row - 1][@last_changed_column + 1]
     ]
     values.all? { |value| value == values[0] }
   end

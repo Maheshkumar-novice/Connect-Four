@@ -22,7 +22,7 @@ describe Board do
       [p2_marker, p1_marker, p2_marker, p1_marker, p2_marker, p1_marker, p2_marker],
       [p1_marker, p2_marker, p1_marker, p2_marker, p1_marker, p1_marker, p1_marker],
       [p2_marker, p1_marker, p1_marker, p1_marker, p2_marker, p2_marker, p2_marker],
-      [p1_marker, p2_marker, p2_marker, p1_marker, p1_marker, p1_marker, p1_marker],
+      [p2_marker, p2_marker, p2_marker, p1_marker, p1_marker, p1_marker, p2_marker],
       [p2_marker, p1_marker, p2_marker, p1_marker, p2_marker, p2_marker, p2_marker],
       [p1_marker, p2_marker, p1_marker, p2_marker, p2_marker, p1_marker, p1_marker]
     ]
@@ -277,6 +277,40 @@ describe Board do
       end
     end
 
+    context 'when last changed column is in the middle of a connected row' do
+      it 'returns true' do
+        value = [
+          ['', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', ''],
+          [p1_marker, p1_marker, p1_marker, p1_marker, '', '', '']
+
+        ]
+        board.instance_variable_set(:@board, value)
+        board.instance_variable_set(:@last_changed_row, 5)
+        board.instance_variable_set(:@last_changed_column, 1)
+        expect(board.row_has_connected_four?).to be true
+      end
+
+      it 'returns true' do
+        value = [
+          ['', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', ''],
+          [p1_marker, p1_marker, p1_marker, p1_marker, '', '', '']
+
+        ]
+        board.instance_variable_set(:@board, value)
+        board.instance_variable_set(:@last_changed_row, 5)
+        board.instance_variable_set(:@last_changed_column, 2)
+        expect(board.row_has_connected_four?).to be true
+      end
+    end
+
     context 'when no connected four found' do
       it 'returns false' do
         board.instance_variable_set(:@board, full_board)
@@ -396,6 +430,40 @@ describe Board do
       end
     end
 
+    context 'when last changed column is a middle of the top right diagonal' do
+      it 'returns true' do
+        value = [
+          ['', '', '', '', '', '', p1_marker],
+          ['', '', '', '', '', p1_marker, ''],
+          ['', '', '', '', p1_marker, '', ''],
+          ['', '', '', p1_marker, '', '', ''],
+          ['', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', '']
+
+        ]
+        board.instance_variable_set(:@board, value)
+        board.instance_variable_set(:@last_changed_row, 2)
+        board.instance_variable_set(:@last_changed_column, 4)
+        expect(board.diagonal_has_connected_four?).to be true
+      end
+
+      it 'returns true' do
+        value = [
+          ['', '', '', '', '', '', p1_marker],
+          ['', '', '', '', '', p1_marker, ''],
+          ['', '', '', '', p1_marker, '', ''],
+          ['', '', '', p1_marker, '', '', ''],
+          ['', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', '']
+
+        ]
+        board.instance_variable_set(:@board, value)
+        board.instance_variable_set(:@last_changed_row, 0)
+        board.instance_variable_set(:@last_changed_column, 4)
+        expect(board.diagonal_has_connected_four?).to be true
+      end
+    end
+
     context 'when top left diagonal has connect four' do
       it 'returns true' do
         value = [
@@ -409,6 +477,40 @@ describe Board do
         ]
         board.instance_variable_set(:@board, value)
         board.instance_variable_set(:@last_changed_row, 0)
+        board.instance_variable_set(:@last_changed_column, 3)
+        expect(board.diagonal_has_connected_four?).to be true
+      end
+    end
+
+    context 'when last changed column is a middle of the top right diagonal' do
+      it 'returns true' do
+        value = [
+          [p1_marker, '', '', '', '', '', ''],
+          ['', p1_marker, '', '', '', '', ''],
+          ['', '', p1_marker, '', '', '', ''],
+          ['', '', '', p1_marker, '', '', ''],
+          ['', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', '']
+
+        ]
+        board.instance_variable_set(:@board, value)
+        board.instance_variable_set(:@last_changed_row, 1)
+        board.instance_variable_set(:@last_changed_column, 2)
+        expect(board.diagonal_has_connected_four?).to be true
+      end
+
+      it 'returns true' do
+        value = [
+          [p1_marker, '', '', '', '', '', ''],
+          ['', p1_marker, '', '', '', '', ''],
+          ['', '', p1_marker, '', '', '', ''],
+          ['', '', '', p1_marker, '', '', ''],
+          ['', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', '']
+
+        ]
+        board.instance_variable_set(:@board, value)
+        board.instance_variable_set(:@last_changed_row, 2)
         board.instance_variable_set(:@last_changed_column, 3)
         expect(board.diagonal_has_connected_four?).to be true
       end
@@ -432,6 +534,40 @@ describe Board do
       end
     end
 
+    context 'when last changed column is a middle of the bottom right diagonal' do
+      it 'returns true' do
+        value = [
+          ['', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', ''],
+          ['', '', '', p1_marker, '', '', ''],
+          ['', '', '', '', p1_marker, '', ''],
+          ['', '', '', '', '', p1_marker, ''],
+          ['', '', '', '', '', '', p1_marker]
+
+        ]
+        board.instance_variable_set(:@board, value)
+        board.instance_variable_set(:@last_changed_row, 4)
+        board.instance_variable_set(:@last_changed_column, 5)
+        expect(board.diagonal_has_connected_four?).to be true
+      end
+
+      it 'returns true' do
+        value = [
+          ['', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', ''],
+          ['', '', '', p1_marker, '', '', ''],
+          ['', '', '', '', p1_marker, '', ''],
+          ['', '', '', '', '', p1_marker, ''],
+          ['', '', '', '', '', '', p1_marker]
+
+        ]
+        board.instance_variable_set(:@board, value)
+        board.instance_variable_set(:@last_changed_row, 3)
+        board.instance_variable_set(:@last_changed_column, 4)
+        expect(board.diagonal_has_connected_four?).to be true
+      end
+    end
+
     context 'when bottom left diagonal has connect four' do
       it 'returns true' do
         value = [
@@ -446,6 +582,40 @@ describe Board do
         board.instance_variable_set(:@board, value)
         board.instance_variable_set(:@last_changed_row, 2)
         board.instance_variable_set(:@last_changed_column, 3)
+        expect(board.diagonal_has_connected_four?).to be true
+      end
+    end
+
+    context 'when last changed column is a middle of the bottom left diagonal' do
+      it 'returns true' do
+        value = [
+          ['', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', ''],
+          ['', '', '', p1_marker, '', '', ''],
+          ['', '', p1_marker, '', '', '', ''],
+          ['', p1_marker, '', '', '', '', ''],
+          [p1_marker, '', '', '', '', '', '']
+
+        ]
+        board.instance_variable_set(:@board, value)
+        board.instance_variable_set(:@last_changed_row, 4)
+        board.instance_variable_set(:@last_changed_column, 1)
+        expect(board.diagonal_has_connected_four?).to be true
+      end
+
+      it 'returns true' do
+        value = [
+          ['', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', ''],
+          ['', '', '', p1_marker, '', '', ''],
+          ['', '', p1_marker, '', '', '', ''],
+          ['', p1_marker, '', '', '', '', ''],
+          [p1_marker, '', '', '', '', '', '']
+
+        ]
+        board.instance_variable_set(:@board, value)
+        board.instance_variable_set(:@last_changed_row, 3)
+        board.instance_variable_set(:@last_changed_column, 2)
         expect(board.diagonal_has_connected_four?).to be true
       end
     end
@@ -465,6 +635,7 @@ describe Board do
         board.instance_variable_set(:@last_changed_column, 4)
         allow(board).to receive(:bottom_diagonal_connected_four?).and_return(false)
         allow(board).to receive(:top_left_diagonal_connected_four?).and_return(false)
+        allow(board).to receive(:top_middle_diagonal_has_connected_four?).and_return(false)
         expect(board.diagonal_has_connected_four?).to be false
       end
     end
@@ -475,6 +646,7 @@ describe Board do
         board.instance_variable_set(:@last_changed_column, 0)
         allow(board).to receive(:bottom_diagonal_connected_four?).and_return(false)
         allow(board).to receive(:top_right_diagonal_connected_four?).and_return(false)
+        allow(board).to receive(:top_middle_diagonal_has_connected_four?).and_return(false)
         expect(board.diagonal_has_connected_four?).to be false
       end
     end
@@ -485,6 +657,7 @@ describe Board do
         board.instance_variable_set(:@last_changed_column, 0)
         allow(board).to receive(:top_diagonal_connected_four?).and_return(false)
         allow(board).to receive(:bottom_left_diagonal_connected_four?).and_return(false)
+        allow(board).to receive(:bottom_middle_diagonal_has_connected_four?).and_return(false)
         expect(board.diagonal_has_connected_four?).to be false
       end
     end
@@ -494,7 +667,8 @@ describe Board do
         board.instance_variable_set(:@last_changed_row, 3)
         board.instance_variable_set(:@last_changed_column, 4)
         allow(board).to receive(:top_diagonal_connected_four?).and_return(false)
-        allow(board).to receive(:bottom_left_diagonal_connected_four?).and_return(false)
+        allow(board).to receive(:bottom_right_diagonal_connected_four?).and_return(false)
+        allow(board).to receive(:bottom_middle_diagonal_has_connected_four?).and_return(false)
         expect(board.diagonal_has_connected_four?).to be false
       end
     end
