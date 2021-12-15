@@ -29,7 +29,17 @@ module Display
     INTRO
   end
 
-  def rules; end
+  def rules
+    puts <<~RULES
+
+      [0;1;34;94m*[0m [0;1;34;94mTwo[0m [0;1;34;94mplayers[0m [0;1;34;94mga[0;34mme[0m
+      [0;1;34;94m*[0m [0;1;34;94mChoose[0m [0;1;34;94ma[0m [0;1;34;94mcolum[0;34mn[0m [0;34mto[0m [0;34mput[0m [0;34ma[0m [0;34mdisc[0m
+      [0;1;34;94m*[0m [0;1;34;94mIf[0m [0;1;34;94ma[0m [0;1;34;94mplayer[0m [0;1;34;94mge[0;34mts[0m [0;34ma[0m [0;34mconnected[0m [0;34mf[0;37mour,[0m [0;37mthey[0m [0;37mwins[0m
+      [0;1;34;94m*[0m [0;1;34;94mConnected[0m [0;1;34;94mfour[0m [0;34mcan[0m [0;34mbe[0m [0;34min[0m [0;34mrows,[0m [0;37mcolumns[0m [0;37mor[0m [0;37mdiag[0;1;30;90monals[0m
+      [0;1;34;94m*[0m [0;1;34;94mIf[0m [0;1;34;94mall[0m [0;1;34;94mcolumns[0m [0;34mget[0m [0;34mfilled,[0m [0;34mthe[0;37mn[0m [0;37mthe[0m [0;37mgame[0m [0;37mis[0m [0;37ma[0m [0;1;30;90mdraw[0m
+
+    RULES
+  end
 
   def player1_name_prompt
     puts <<~NAME
