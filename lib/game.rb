@@ -52,7 +52,7 @@ class Game
 
   def create_player_name
     name = gets.chomp
-    until @player1.valid_name?(name)
+    until Player.valid_name?(name)
       print_invalid('name')
       print_prompt
       name = gets.chomp

@@ -10,28 +10,28 @@ describe Player do
     context 'when a name with length 0 given' do
       it 'returns false' do
         name = ''
-        expect(player.valid_name?(name)).to be false
+        expect(Player.valid_name?(name)).to be false
       end
     end
 
     context 'when a name with length more than max length given' do
       it 'returns false' do
         name = 'qwertymanfrommarsgoingtovenus'
-        expect(player.valid_name?(name)).to be false
+        expect(Player.valid_name?(name)).to be false
       end
     end
 
     context 'when a name with special characters given' do
       it 'returns false' do
         name = '^hello $mate!'
-        expect(player.valid_name?(name)).to be false
+        expect(Player.valid_name?(name)).to be false
       end
     end
 
     context 'when a valid name given' do
       it 'returns true' do
         name = 'hello mate'
-        expect(player.valid_name?(name)).to be true
+        expect(Player.valid_name?(name)).to be true
       end
     end
   end

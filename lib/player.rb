@@ -12,7 +12,7 @@ class Player
     @marker = nil
   end
 
-  def valid_name?(name)
+  def self.valid_name?(name)
     name.match?(/^[\w+\s]{1,#{MAX_NAME_LENGTH}}$/)
   end
 end

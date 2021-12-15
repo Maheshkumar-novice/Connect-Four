@@ -5,6 +5,7 @@ require_relative '../lib/game'
 
 describe Game do
   subject(:game) { described_class.new(player1, player2, board) }
+  let(:player) { class_double(Player) }
   let(:player1) { instance_double(Player) }
   let(:player2) { instance_double(Player) }
   let(:board) { instance_double(Board) }
@@ -65,7 +66,7 @@ describe Game do
       context 'when invalid name given twice and a valid input given' do
         before do
           allow(game).to receive(:gets).and_return('', '', 'hell fury')
-          allow(player1).to receive(:valid_name?).and_return(false, false, true)
+          allow(player).to receive(:valid_name?).and_return(false, false, true)
         end
 
         it 'shows error message twice' do
@@ -85,7 +86,7 @@ describe Game do
     context 'when a valid name given as input' do
       before do
         allow(game).to receive(:gets).and_return('hell fury')
-        allow(player1).to receive(:valid_name?).and_return(true)
+        allow(player).to receive(:valid_name?).and_return(true)
       end
 
       it 'finishes execution without showing error message' do
