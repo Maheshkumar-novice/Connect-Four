@@ -124,7 +124,7 @@ describe Game do
         it 'returns the valid symbol' do
           allow(game).to receive(:print_invalid)
           symbol = game.create_player_marker
-          expect(symbol).to eq('red')
+          expect(symbol).to eq(:red)
           game.create_player_marker
         end
       end
@@ -144,7 +144,7 @@ describe Game do
       it 'returns the valid symbol' do
         allow(game).to receive(:print_invalid)
         symbol = game.create_player_marker
-        expect(symbol).to eq('red')
+        expect(symbol).to eq(:red)
         game.create_player_marker
       end
     end

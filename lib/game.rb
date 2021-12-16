@@ -33,7 +33,7 @@ class Game
   end
 
   def remove_player1_marker_from_list
-    @markers.delete(@player1.marker)
+    @markers.delete(@player1.marker.to_s)
   end
 
   def update_player1_data
@@ -68,7 +68,7 @@ class Game
       print_prompt
       marker = gets.chomp
     end
-    marker.downcase
+    marker.downcase.to_sym
   end
 
   def game_loop
