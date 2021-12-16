@@ -3,7 +3,7 @@
 
 require_relative './display'
 
-# rubocop:disable Metrics/AbcSize, Metrics/ClassLength
+# rubocop:disable Metrics/ClassLength
 # Connect Four Board
 class Board
   include Display
@@ -11,10 +11,12 @@ class Board
   attr_reader :board
 
   def initialize
-    @board = Array.new(6) { Array.new(7, '') }
+    @rows = 6
+    @columns = 7
+    @board = Array.new(@rows) { Array.new(@columns, '') }
     @last_changed_column = nil
     @last_changed_row = nil
-    @column_to_rows_mapping = Hash.new { |hash, key| hash[key] = (0..5).to_a }
+    @column_to_rows_mapping = Hash.new { |hash, key| hash[key] = (0..(@rows - 1)).to_a }
   end
 
   def add_disc(move, disc)
@@ -49,15 +51,9 @@ class Board
   end
 
   def column_has_connected_four?
-    return false if @last_changed_row + 3 > 5
+    return false unless row_satisfies_boundary_conditions?(@last_changed_row + 3)
 
-    values = [
-      board[@last_changed_row][@last_changed_column],
-      board[@last_changed_row + 1][@last_changed_column],
-      board[@last_changed_row + 2][@last_changed_column],
-      board[@last_changed_row + 3][@last_changed_column]
-    ]
-    values.all? { |value| value == values[0] }
+    all_values_are_same?([0, 0], [1, 0], [2, 0], [3, 0])
   end
 
   def diagonal_has_connected_four?
@@ -79,28 +75,33 @@ class Board
 
   private
 
-  def row_right_has_connected_four?
-    return false if @last_changed_column + 3 > 6
+  def all_values_are_same?(*args)
+    value_to_compare = @board[@last_changed_row][@last_changed_column]
+    args.each do |row_change, column_change|
+      value = @board[@last_changed_row + row_change][@last_changed_column + column_change]
+      return false unless value_to_compare == value
+    end
+    true
+  end
 
-    values = [
-      board[@last_changed_row][@last_changed_column],
-      board[@last_changed_row][@last_changed_column + 1],
-      board[@last_changed_row][@last_changed_column + 2],
-      board[@last_changed_row][@last_changed_column + 3]
-    ]
-    values.all? { |value| value == values[0] }
+  def row_satisfies_boundary_conditions?(*args)
+    args.all? { |value| value >= 0 && value <= (@rows - 1) }
+  end
+
+  def column_satisfies_boundary_conditions?(*args)
+    args.all? { |value| value >= 0 && value <= (@columns - 1) }
+  end
+
+  def row_right_has_connected_four?
+    return false unless column_satisfies_boundary_conditions?(@last_changed_column + 3)
+
+    all_values_are_same?([0, 0], [0, 1], [0, 2], [0, 3])
   end
 
   def row_left_has_connected_four?
-    return false if (@last_changed_column - 3).negative?
+    return false unless column_satisfies_boundary_conditions?(@last_changed_column - 3)
 
-    values = [
-      board[@last_changed_row][@last_changed_column],
-      board[@last_changed_row][@last_changed_column - 1],
-      board[@last_changed_row][@last_changed_column - 2],
-      board[@last_changed_row][@last_changed_column - 3]
-    ]
-    values.all? { |value| value == values[0] }
+    all_values_are_same?([0, 0], [0, -1], [0, -2], [0, -3])
   end
 
   def row_middle_has_connected_four?
@@ -108,29 +109,15 @@ class Board
   end
 
   def row_middle_right_has_connected_four?
-    return false if @last_changed_column + 2 > 6 || (@last_changed_column - 1).negative?
+    return false unless column_satisfies_boundary_conditions?(@last_changed_column + 2, @last_changed_column - 1)
 
-    values = [
-      board[@last_changed_row][@last_changed_column - 1],
-      board[@last_changed_row][@last_changed_column],
-      board[@last_changed_row][@last_changed_column + 1],
-      board[@last_changed_row][@last_changed_column + 2]
-    ]
-
-    values.all? { |value| value == values[0] }
+    all_values_are_same?([0, -1], [0, 0], [0, 1], [0, 2])
   end
 
   def row_middle_left_has_connected_four?
-    return false if @last_changed_column - 2 > 6 || (@last_changed_column + 1).negative?
+    return false unless column_satisfies_boundary_conditions?(@last_changed_column - 2, @last_changed_column + 1)
 
-    values = [
-      board[@last_changed_row][@last_changed_column - 2],
-      board[@last_changed_row][@last_changed_column - 1],
-      board[@last_changed_row][@last_changed_column],
-      board[@last_changed_row][@last_changed_column + 1]
-    ]
-
-    values.all? { |value| value == values[0] }
+    all_values_are_same?([0, -2], [0, -1], [0, 0], [0, 1])
   end
 
   def top_diagonal_has_connected_four?
@@ -138,27 +125,17 @@ class Board
   end
 
   def top_right_diagonal_has_connected_four?
-    return false if (@last_changed_row - 3).negative? || (@last_changed_column + 3) > 6
+    return false unless row_satisfies_boundary_conditions?(@last_changed_row - 3)
+    return false unless column_satisfies_boundary_conditions?(@last_changed_column + 3)
 
-    values = [
-      board[@last_changed_row][@last_changed_column],
-      board[@last_changed_row - 1][@last_changed_column + 1],
-      board[@last_changed_row - 2][@last_changed_column + 2],
-      board[@last_changed_row - 3][@last_changed_column + 3]
-    ]
-    values.all? { |value| value == values[0] }
+    all_values_are_same?([0, 0], [-1, 1], [-2, 2], [-3, 3])
   end
 
   def top_left_diagonal_has_connected_four?
-    return false if (@last_changed_row - 3).negative? || (@last_changed_column - 3).negative?
+    return false unless row_satisfies_boundary_conditions?(@last_changed_row - 3)
+    return false unless column_satisfies_boundary_conditions?(@last_changed_column - 3)
 
-    values = [
-      board[@last_changed_row][@last_changed_column],
-      board[@last_changed_row - 1][@last_changed_column - 1],
-      board[@last_changed_row - 2][@last_changed_column - 2],
-      board[@last_changed_row - 3][@last_changed_column - 3]
-    ]
-    values.all? { |value| value == values[0] }
+    all_values_are_same?([0, 0], [-1, -1], [-2, -2], [-3, -3])
   end
 
   def top_middle_diagonal_has_connected_four?
@@ -170,31 +147,17 @@ class Board
   end
 
   def top_right_middle_right_has_connected_four?
-    if (@last_changed_row - 2).negative? || (@last_changed_column + 2) > 6 || (@last_changed_row + 1) > 5 || (@last_changed_column - 1).negative?
-      return false
-    end
+    return false unless row_satisfies_boundary_conditions?(@last_changed_row - 2, @last_changed_row + 1)
+    return false unless column_satisfies_boundary_conditions?(@last_changed_column + 2, @last_changed_column - 1)
 
-    values = [
-      board[@last_changed_row + 1][@last_changed_column - 1],
-      board[@last_changed_row][@last_changed_column],
-      board[@last_changed_row - 1][@last_changed_column + 1],
-      board[@last_changed_row - 2][@last_changed_column + 2]
-    ]
-    values.all? { |value| value == values[0] }
+    all_values_are_same?([1, -1], [0, 0], [-1, 1], [-2, 2])
   end
 
   def top_right_middle_left_has_connected_four?
-    if (@last_changed_row - 1).negative? || (@last_changed_column + 1) > 6 || (@last_changed_row + 2) > 5 || (@last_changed_column - 2).negative?
-      return false
-    end
+    return false unless row_satisfies_boundary_conditions?(@last_changed_row - 1, @last_changed_row + 2)
+    return false unless column_satisfies_boundary_conditions?(@last_changed_column + 1, @last_changed_column - 2)
 
-    values = [
-      board[@last_changed_row + 2][@last_changed_column - 2],
-      board[@last_changed_row + 1][@last_changed_column - 1],
-      board[@last_changed_row][@last_changed_column],
-      board[@last_changed_row - 1][@last_changed_column + 1]
-    ]
-    values.all? { |value| value == values[0] }
+    all_values_are_same?([2, -2], [1, -1], [0, 0], [-1, 1])
   end
 
   def top_left_middle_diagonal_has_connected_four?
@@ -202,31 +165,17 @@ class Board
   end
 
   def top_left_middle_right_has_connected_four?
-    if (@last_changed_row - 2).negative? || (@last_changed_column - 2).negative? || (@last_changed_row + 1) > 5 || (@last_changed_column + 1) > 6
-      return false
-    end
+    return false unless row_satisfies_boundary_conditions?(@last_changed_row - 2, @last_changed_row + 1)
+    return false unless column_satisfies_boundary_conditions?(@last_changed_column - 2, @last_changed_column + 1)
 
-    values = [
-      board[@last_changed_row + 1][@last_changed_column + 1],
-      board[@last_changed_row][@last_changed_column],
-      board[@last_changed_row - 1][@last_changed_column - 1],
-      board[@last_changed_row - 2][@last_changed_column - 2]
-    ]
-    values.all? { |value| value == values[0] }
+    all_values_are_same?([1, 1], [0, 0], [-1, -1], [-2, -2])
   end
 
   def top_left_middle_left_has_connected_four?
-    if (@last_changed_row - 1).negative? || (@last_changed_column - 1).negative? || (@last_changed_row + 2) > 5 || (@last_changed_column + 2) > 6
-      return false
-    end
+    return false unless row_satisfies_boundary_conditions?(@last_changed_row - 1, @last_changed_row + 2)
+    return false unless column_satisfies_boundary_conditions?(@last_changed_column - 1, @last_changed_column + 2)
 
-    values = [
-      board[@last_changed_row + 1][@last_changed_column + 1],
-      board[@last_changed_row + 2][@last_changed_column + 2],
-      board[@last_changed_row][@last_changed_column],
-      board[@last_changed_row - 1][@last_changed_column - 1]
-    ]
-    values.all? { |value| value == values[0] }
+    all_values_are_same?([1, 1], [2, 2], [0, 0], [-1, -1])
   end
 
   def bottom_diagonal_has_connected_four?
@@ -234,27 +183,17 @@ class Board
   end
 
   def bottom_right_diagonal_has_connected_four?
-    return false if (@last_changed_row + 3) > 5 || (@last_changed_column + 3) > 6
+    return false unless row_satisfies_boundary_conditions?(@last_changed_row + 3)
+    return false unless column_satisfies_boundary_conditions?(@last_changed_column + 3)
 
-    values = [
-      board[@last_changed_row][@last_changed_column],
-      board[@last_changed_row + 1][@last_changed_column + 1],
-      board[@last_changed_row + 2][@last_changed_column + 2],
-      board[@last_changed_row + 3][@last_changed_column + 3]
-    ]
-    values.all? { |value| value == values[0] }
+    all_values_are_same?([0, 0], [1, 1], [2, 2], [3, 3])
   end
 
   def bottom_left_diagonal_has_connected_four?
-    return false if (@last_changed_row + 3) > 5 || (@last_changed_column - 3).negative?
+    return false unless row_satisfies_boundary_conditions?(@last_changed_row + 3)
+    return false unless column_satisfies_boundary_conditions?(@last_changed_column - 3)
 
-    values = [
-      board[@last_changed_row][@last_changed_column],
-      board[@last_changed_row + 1][@last_changed_column - 1],
-      board[@last_changed_row + 2][@last_changed_column - 2],
-      board[@last_changed_row + 3][@last_changed_column - 3]
-    ]
-    values.all? { |value| value == values[0] }
+    all_values_are_same?([0, 0], [1, -1], [2, -2], [3, -3])
   end
 
   def bottom_middle_diagonal_has_connected_four?
@@ -266,31 +205,17 @@ class Board
   end
 
   def bottom_right_middle_right_has_connected_four?
-    if (@last_changed_row + 1) > 5 || (@last_changed_column + 1) > 6 || (@last_changed_row - 2).negative? || (@last_changed_column - 2).negative?
-      return false
-    end
+    return false unless row_satisfies_boundary_conditions?(@last_changed_row + 1, @last_changed_row - 2)
+    return false unless column_satisfies_boundary_conditions?(@last_changed_column + 1, @last_changed_column - 2)
 
-    values = [
-      board[@last_changed_row + 1][@last_changed_column + 1],
-      board[@last_changed_row][@last_changed_column],
-      board[@last_changed_row - 1][@last_changed_column - 1],
-      board[@last_changed_row - 2][@last_changed_column - 2]
-    ]
-    values.all? { |value| value == values[0] }
+    all_values_are_same?([1, 1], [0, 0], [-1, -1], [-2, -2])
   end
 
   def bottom_right_middle_left_has_connected_four?
-    if (@last_changed_row + 2) > 5 || (@last_changed_column + 2) > 6 || (@last_changed_row - 1).negative? || (@last_changed_column - 1).negative?
-      return false
-    end
+    return false unless row_satisfies_boundary_conditions?(@last_changed_row + 2, @last_changed_row - 1)
+    return false unless column_satisfies_boundary_conditions?(@last_changed_column + 2, @last_changed_column - 1)
 
-    values = [
-      board[@last_changed_row + 2][@last_changed_column + 2],
-      board[@last_changed_row + 1][@last_changed_column + 1],
-      board[@last_changed_row][@last_changed_column],
-      board[@last_changed_row - 1][@last_changed_column - 1]
-    ]
-    values.all? { |value| value == values[0] }
+    all_values_are_same?([2, 2], [1, 1], [0, 0], [-1, -1])
   end
 
   def bottom_left_middle_diagonal_has_connected_four?
@@ -298,31 +223,17 @@ class Board
   end
 
   def bottom_left_middle_right_has_connected_four?
-    if (@last_changed_row + 1) > 5 || (@last_changed_column - 1).negative? || (@last_changed_row - 2).negative? || (@last_changed_column + 2) > 6
-      return false
-    end
+    return false unless row_satisfies_boundary_conditions?(@last_changed_row + 1, @last_changed_row - 2)
+    return false unless column_satisfies_boundary_conditions?(@last_changed_column - 1, @last_changed_column + 2)
 
-    values = [
-      board[@last_changed_row + 1][@last_changed_column - 1],
-      board[@last_changed_row][@last_changed_column],
-      board[@last_changed_row - 1][@last_changed_column + 1],
-      board[@last_changed_row - 2][@last_changed_column + 2]
-    ]
-    values.all? { |value| value == values[0] }
+    all_values_are_same?([1, -1], [0, 0], [-1, 1], [-2, 2])
   end
 
   def bottom_left_middle_left_has_connected_four?
-    if (@last_changed_row + 2) > 5 || (@last_changed_column - 2).negative? || (@last_changed_row - 1).negative? || (@last_changed_column + 1) > 6
-      return false
-    end
+    return false unless row_satisfies_boundary_conditions?(@last_changed_row + 2, @last_changed_row - 1)
+    return false unless column_satisfies_boundary_conditions?(@last_changed_column - 2, @last_changed_column + 1)
 
-    values = [
-      board[@last_changed_row + 1][@last_changed_column - 1],
-      board[@last_changed_row + 2][@last_changed_column - 2],
-      board[@last_changed_row][@last_changed_column],
-      board[@last_changed_row - 1][@last_changed_column + 1]
-    ]
-    values.all? { |value| value == values[0] }
+    all_values_are_same?([1, -1], [2, -2], [0, 0], [-1, 1])
   end
 end
-# rubocop:enable Metrics/AbcSize, Metrics/ClassLength
+# rubocop:enable Metrics/ClassLength
