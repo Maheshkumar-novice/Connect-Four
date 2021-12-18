@@ -51,7 +51,7 @@ Using Test Driven Development style, this game is developed with Ruby. RSpec is 
 
 ### Prerequisites
 
-- Ruby (>= 2.7) - [Install](https://www.theodinproject.com/paths/full-stack-ruby-on-rails/courses/ruby-programming/lessons/installing-ruby-ruby-programming)
+- Ruby (>= 2.5) - [Install](https://www.theodinproject.com/paths/full-stack-ruby-on-rails/courses/ruby-programming/lessons/installing-ruby-ruby-programming)
 - RSpec - [Install](https://www.theodinproject.com/paths/full-stack-ruby-on-rails/courses/ruby-programming/lessons/introduction-to-rspec)
 
 ### Installation
