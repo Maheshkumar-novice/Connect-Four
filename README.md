@@ -36,7 +36,7 @@ Using Test Driven Development style, this game is developed with Ruby. RSpec is 
 
 ## Demo
 
-<!-- ![Example](./assets/example.gif) -->
+![Example](./assets/example.gif)
 </br>
   
 ## Built With
