@@ -145,7 +145,7 @@ module Display
   def announce_draw
     puts <<~DRAW
 
-      #{color_text("It's Draw!", :yellow)}
+      #{color_text("It's a Draw!", :yellow)}
     DRAW
   end
 
