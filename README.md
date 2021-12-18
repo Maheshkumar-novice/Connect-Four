@@ -67,6 +67,10 @@ cd Connect-Four
 ```sh
 ruby lib/main.rb
 ```
+To run the tests,
+```sh
+rspec
+```
 
 ## What I Learned
 
