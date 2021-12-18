@@ -3,7 +3,6 @@
 
 require_relative './display'
 
-# rubocop:disable Metrics/ClassLength
 # Connect Four Board
 class Board
   include Display
@@ -236,4 +235,3 @@ class Board
     all_values_are_same?([1, -1], [2, -2], [0, 0], [-1, 1])
   end
 end
-# rubocop:enable Metrics/ClassLength

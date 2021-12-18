@@ -4,7 +4,6 @@
 require_relative './color'
 
 # Module for Display
-# rubocop:disable Metrics/ModuleLength
 module Display
   include Color
 
@@ -160,4 +159,3 @@ module Display
     system('clear')
   end
 end
-# rubocop:enable Metrics/ModuleLength

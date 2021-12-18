@@ -8,3 +8,9 @@ Metrics/BlockLength:
 Layout/LineLength:
   Exclude:
     - "spec/*"
+Metrics/ClassLength:
+  Exclude:
+    - "lib/board.rb"
+Metrics/ModuleLength:
+  Exclude:
+    - "lib/display.rb"
