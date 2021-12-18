@@ -45,7 +45,7 @@ Using Test Driven Development style, this game is developed with Ruby. RSpec is 
 
 ## Play Online
 
-[Replit](#)
+[Replit - Connect Four](https://replit.com/@MaheshkumarP/Connect-Four)
 
 ## Play Local
 
