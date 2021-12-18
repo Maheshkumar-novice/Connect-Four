@@ -3,4 +3,12 @@
 
 require_relative './game'
 
-Game.new.play
+loop do
+  Game.new.play
+
+  puts 'Do you want play again? (y)'
+  choice = gets.chomp
+  break unless choice.downcase == 'y'
+
+  system('clear')
+end
