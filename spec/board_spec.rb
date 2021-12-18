@@ -429,7 +429,7 @@ describe Board do
         ]
         board.instance_variable_set(:@board, board_state)
         board.instance_variable_set(:@last_changed_row, 5)
-        board.instance_variable_set(:@last_changed_column, 4)
+        board.instance_variable_set(:@last_changed_column, 3)
         expect(board).not_to be_row_has_connected_four
       end
     end
@@ -523,7 +523,7 @@ describe Board do
       end
 
       it 'returns true' do
-        board.instance_variable_set(:@last_changed_row, 3)
+        board.instance_variable_set(:@last_changed_row, 0)
         board.instance_variable_set(:@last_changed_column, 6)
         expect(board).to be_diagonal_has_connected_four
       end
@@ -536,7 +536,7 @@ describe Board do
         end
 
         it 'returns true' do
-          board.instance_variable_set(:@last_changed_row, 0)
+          board.instance_variable_set(:@last_changed_row, 3)
           board.instance_variable_set(:@last_changed_column, 4)
           expect(board).to be_diagonal_has_connected_four
         end
@@ -560,7 +560,7 @@ describe Board do
       end
 
       it 'returns true' do
-        board.instance_variable_set(:@last_changed_row, 0)
+        board.instance_variable_set(:@last_changed_row, 3)
         board.instance_variable_set(:@last_changed_column, 3)
         expect(board).to be_diagonal_has_connected_four
       end
@@ -568,13 +568,13 @@ describe Board do
       context 'when last changed column is in the middle of the top left diagonal' do
         it 'returns true' do
           board.instance_variable_set(:@last_changed_row, 1)
-          board.instance_variable_set(:@last_changed_column, 2)
+          board.instance_variable_set(:@last_changed_column, 1)
           expect(board).to be_diagonal_has_connected_four
         end
 
         it 'returns true' do
           board.instance_variable_set(:@last_changed_row, 2)
-          board.instance_variable_set(:@last_changed_column, 3)
+          board.instance_variable_set(:@last_changed_column, 2)
           expect(board).to be_diagonal_has_connected_four
         end
       end

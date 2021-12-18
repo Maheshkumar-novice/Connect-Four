@@ -46,17 +46,15 @@ class Board
   end
 
   def row_has_connected_four?
-    row_right_has_connected_four? || row_middle_has_connected_four? || row_left_has_connected_four?
+    connected_four?(@columns, @board[@last_changed_row])
   end
 
   def column_has_connected_four?
-    return false unless row_satisfies_boundary_conditions?(@last_changed_row + 3)
-
-    all_values_are_same?([0, 0], [1, 0], [2, 0], [3, 0])
+    connected_four?(@rows, @board.transpose[@last_changed_column])
   end
 
   def diagonal_has_connected_four?
-    top_diagonal_has_connected_four? || bottom_diagonal_has_connected_four?
+    right_diagonal_has_connected_four? || left_diagonal_has_connected_four?
   end
 
   def board_empty?
@@ -74,164 +72,58 @@ class Board
 
   private
 
-  def all_values_are_same?(*args)
-    value_to_compare = @board[@last_changed_row][@last_changed_column]
-    args.each do |row_change, column_change|
-      value = @board[@last_changed_row + row_change][@last_changed_column + column_change]
-      return false unless value_to_compare == value
+  def connected_four?(iterations, array)
+    last_marker = @board[@last_changed_row][@last_changed_column]
+    (iterations - 3).times do |index|
+      return true if array[index..(index + 3)].all? { |value| value == last_marker }
     end
-    true
+    false
   end
 
-  def row_satisfies_boundary_conditions?(*args)
-    args.all? { |value| value >= 0 && value <= (@rows - 1) }
+  def right_diagonal_has_connected_four?
+    right_diagonal = create_right_diagonal
+    connected_four?(right_diagonal.size, right_diagonal)
   end
 
-  def column_satisfies_boundary_conditions?(*args)
-    args.all? { |value| value >= 0 && value <= (@columns - 1) }
+  def left_diagonal_has_connected_four?
+    left_diagonal = create_left_diagonal
+    connected_four?(left_diagonal.size, left_diagonal)
   end
 
-  def row_right_has_connected_four?
-    return false unless column_satisfies_boundary_conditions?(@last_changed_column + 3)
-
-    all_values_are_same?([0, 0], [0, 1], [0, 2], [0, 3])
+  def create_right_diagonal
+    create_diagonal([[-1, -1], [-2, -2], [-3, -3]])
   end
 
-  def row_left_has_connected_four?
-    return false unless column_satisfies_boundary_conditions?(@last_changed_column - 3)
-
-    all_values_are_same?([0, 0], [0, -1], [0, -2], [0, -3])
+  def create_left_diagonal
+    create_diagonal([[-1, 1], [-2, 2], [-3, 3]])
   end
 
-  def row_middle_has_connected_four?
-    row_middle_right_has_connected_four? || row_middle_left_has_connected_four?
+  def create_diagonal(changes)
+    first_half = []
+    second_half = []
+    i = @last_changed_row
+    j = @last_changed_column
+    middle_element = [@board[i][j]]
+    changes.each do |x, y|
+      update_first_half(first_half, i + x, j + y)
+      update_second_half(second_half, i - x, j - y)
+    end
+    first_half.reverse + middle_element + second_half
   end
 
-  def row_middle_right_has_connected_four?
-    return false unless column_satisfies_boundary_conditions?(@last_changed_column + 2, @last_changed_column - 1)
+  def update_first_half(first_half, row, column)
+    return unless boundary_satisifed?(row, column)
 
-    all_values_are_same?([0, -1], [0, 0], [0, 1], [0, 2])
+    first_half << @board[row][column]
   end
 
-  def row_middle_left_has_connected_four?
-    return false unless column_satisfies_boundary_conditions?(@last_changed_column - 2, @last_changed_column + 1)
+  def update_second_half(second_half, row, column)
+    return unless boundary_satisifed?(row, column)
 
-    all_values_are_same?([0, -2], [0, -1], [0, 0], [0, 1])
+    second_half << @board[row][column]
   end
 
-  def top_diagonal_has_connected_four?
-    top_right_diagonal_has_connected_four? || top_left_diagonal_has_connected_four? || top_middle_diagonal_has_connected_four?
-  end
-
-  def top_right_diagonal_has_connected_four?
-    return false unless row_satisfies_boundary_conditions?(@last_changed_row - 3)
-    return false unless column_satisfies_boundary_conditions?(@last_changed_column + 3)
-
-    all_values_are_same?([0, 0], [-1, 1], [-2, 2], [-3, 3])
-  end
-
-  def top_left_diagonal_has_connected_four?
-    return false unless row_satisfies_boundary_conditions?(@last_changed_row - 3)
-    return false unless column_satisfies_boundary_conditions?(@last_changed_column - 3)
-
-    all_values_are_same?([0, 0], [-1, -1], [-2, -2], [-3, -3])
-  end
-
-  def top_middle_diagonal_has_connected_four?
-    top_right_middle_diagonal_has_connected_four? || top_left_middle_diagonal_has_connected_four?
-  end
-
-  def top_right_middle_diagonal_has_connected_four?
-    top_right_middle_right_has_connected_four? || top_right_middle_left_has_connected_four?
-  end
-
-  def top_right_middle_right_has_connected_four?
-    return false unless row_satisfies_boundary_conditions?(@last_changed_row - 2, @last_changed_row + 1)
-    return false unless column_satisfies_boundary_conditions?(@last_changed_column + 2, @last_changed_column - 1)
-
-    all_values_are_same?([1, -1], [0, 0], [-1, 1], [-2, 2])
-  end
-
-  def top_right_middle_left_has_connected_four?
-    return false unless row_satisfies_boundary_conditions?(@last_changed_row - 1, @last_changed_row + 2)
-    return false unless column_satisfies_boundary_conditions?(@last_changed_column + 1, @last_changed_column - 2)
-
-    all_values_are_same?([2, -2], [1, -1], [0, 0], [-1, 1])
-  end
-
-  def top_left_middle_diagonal_has_connected_four?
-    top_left_middle_right_has_connected_four? || top_left_middle_left_has_connected_four?
-  end
-
-  def top_left_middle_right_has_connected_four?
-    return false unless row_satisfies_boundary_conditions?(@last_changed_row - 2, @last_changed_row + 1)
-    return false unless column_satisfies_boundary_conditions?(@last_changed_column - 2, @last_changed_column + 1)
-
-    all_values_are_same?([1, 1], [0, 0], [-1, -1], [-2, -2])
-  end
-
-  def top_left_middle_left_has_connected_four?
-    return false unless row_satisfies_boundary_conditions?(@last_changed_row - 1, @last_changed_row + 2)
-    return false unless column_satisfies_boundary_conditions?(@last_changed_column - 1, @last_changed_column + 2)
-
-    all_values_are_same?([1, 1], [2, 2], [0, 0], [-1, -1])
-  end
-
-  def bottom_diagonal_has_connected_four?
-    bottom_right_diagonal_has_connected_four? || bottom_left_diagonal_has_connected_four? || bottom_middle_diagonal_has_connected_four?
-  end
-
-  def bottom_right_diagonal_has_connected_four?
-    return false unless row_satisfies_boundary_conditions?(@last_changed_row + 3)
-    return false unless column_satisfies_boundary_conditions?(@last_changed_column + 3)
-
-    all_values_are_same?([0, 0], [1, 1], [2, 2], [3, 3])
-  end
-
-  def bottom_left_diagonal_has_connected_four?
-    return false unless row_satisfies_boundary_conditions?(@last_changed_row + 3)
-    return false unless column_satisfies_boundary_conditions?(@last_changed_column - 3)
-
-    all_values_are_same?([0, 0], [1, -1], [2, -2], [3, -3])
-  end
-
-  def bottom_middle_diagonal_has_connected_four?
-    bottom_right_middle_diagonal_has_connected_four? || bottom_left_middle_diagonal_has_connected_four?
-  end
-
-  def bottom_right_middle_diagonal_has_connected_four?
-    bottom_right_middle_right_has_connected_four? || bottom_right_middle_left_has_connected_four?
-  end
-
-  def bottom_right_middle_right_has_connected_four?
-    return false unless row_satisfies_boundary_conditions?(@last_changed_row + 1, @last_changed_row - 2)
-    return false unless column_satisfies_boundary_conditions?(@last_changed_column + 1, @last_changed_column - 2)
-
-    all_values_are_same?([1, 1], [0, 0], [-1, -1], [-2, -2])
-  end
-
-  def bottom_right_middle_left_has_connected_four?
-    return false unless row_satisfies_boundary_conditions?(@last_changed_row + 2, @last_changed_row - 1)
-    return false unless column_satisfies_boundary_conditions?(@last_changed_column + 2, @last_changed_column - 1)
-
-    all_values_are_same?([2, 2], [1, 1], [0, 0], [-1, -1])
-  end
-
-  def bottom_left_middle_diagonal_has_connected_four?
-    bottom_left_middle_right_has_connected_four? || bottom_left_middle_left_has_connected_four?
-  end
-
-  def bottom_left_middle_right_has_connected_four?
-    return false unless row_satisfies_boundary_conditions?(@last_changed_row + 1, @last_changed_row - 2)
-    return false unless column_satisfies_boundary_conditions?(@last_changed_column - 1, @last_changed_column + 2)
-
-    all_values_are_same?([1, -1], [0, 0], [-1, 1], [-2, 2])
-  end
-
-  def bottom_left_middle_left_has_connected_four?
-    return false unless row_satisfies_boundary_conditions?(@last_changed_row + 2, @last_changed_row - 1)
-    return false unless column_satisfies_boundary_conditions?(@last_changed_column - 2, @last_changed_column + 1)
-
-    all_values_are_same?([1, -1], [2, -2], [0, 0], [-1, 1])
+  def boundary_satisifed?(row, column)
+    (row < @rows && row >= 0) && (column < @columns && column >= 0)
   end
 end
