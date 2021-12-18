@@ -1,4 +1,5 @@
 # [Connect-Four](https://en.wikipedia.org/wiki/Connect_Four)
+This project is part of the [The Odin Project](https://www.theodinproject.com/paths/full-stack-ruby-on-rails/courses/ruby-programming/lessons/hangman)'s Ruby curriculum.
 
 <details open="open">
   <summary>Table Of Contents</summary>
@@ -29,7 +30,9 @@
 
 ## Description
 
-<Description>
+>  Connect Four is a two-player game connection board game, in which the players choose a color and then take turns dropping colored discs into seven-column, six-row vertically suspended grid. The pieces fall straight down, occupying the lowest available space within the column. The objective of the game is to be the first to form a horizontal, vertical, or diagonal line of four of one's own discs. - Wikipedia.
+
+  Using Test Driven Development style, this game is developed with Ruby. RSpec is used for TDD. TDD is in simple terms, figuring out what needs to happen, writing a failing test for it, then writing the code to make that test pass and then refactoring the code.
 
 ## Demo
 
@@ -48,9 +51,10 @@
 
 ### Prerequisites
 
-You need to have Ruby installed locally. If you don't have, use [this](https://www.theodinproject.com/paths/full-stack-ruby-on-rails/courses/ruby-programming/lessons/installing-ruby-ruby-programming) to install Ruby first.
+- Ruby (>= 2.7) - [Install](https://www.theodinproject.com/paths/full-stack-ruby-on-rails/courses/ruby-programming/lessons/installing-ruby-ruby-programming)
+- RSpec - [Install](https://www.theodinproject.com/paths/full-stack-ruby-on-rails/courses/ruby-programming/lessons/introduction-to-rspec)
 
-### nstallation
+### Installation
 
 ```sh
 git clone git@github.com:Maheshkumar-novice/connect-four.git
@@ -66,11 +70,19 @@ ruby lib/main.rb
 
 ## What I Learned
 
-- <What>
+- How to write tests with RSpec 
+- Different ways to test methods based on the inputs and outputs
+- Mocks and Stubs
+- Refactoring the Code
+- Splitting the problem into small steps
+- Planning the solution
+- Writing methods that do one thing
+- Played with color texts in Terminal
 
 ## Acknowledgements
 
 * [The Odin Project](https://theodinproject.com)
 * [Replit](https://replit.com)
+* [TOIlet](http://caca.zoy.org/wiki/toilet)
 
 [Move To Top](#connect-four)
