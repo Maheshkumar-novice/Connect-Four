@@ -69,7 +69,7 @@ describe Game do
           allow(player).to receive(:valid_name?).and_return(false, false, true)
         end
 
-        it 'shows error message twice' do
+        it 'shows error message twice and finishes execution' do
           expect(game).to receive(:print_invalid).with('name').twice
           game.create_player_name
         end
@@ -116,7 +116,7 @@ describe Game do
           allow(game.instance_variable_get(:@markers)).to receive(:include?).and_return(false, false, true)
         end
 
-        it 'shows error message twice' do
+        it 'shows error message twice and finishes execution' do
           expect(game).to receive(:print_invalid).with('marker').twice
           game.create_player_marker
         end
@@ -162,7 +162,7 @@ describe Game do
           allow(board).to receive(:valid_move?).and_return(false, false, true)
         end
 
-        it 'shows error message twice' do
+        it 'shows error message twice and finishes execution' do
           expect(game).to receive(:print_invalid).with('move').twice
           game.move
         end
@@ -181,19 +181,15 @@ describe Game do
         allow(board).to receive(:valid_move?).and_return(true)
       end
 
+      it 'finishes execution without showing error message' do
+        expect(game).not_to receive(:print_invalid).with('move')
+        game.move
+      end
+
       it 'returns the valid move' do
         move = game.move
         expect(move).to eq(6)
       end
-    end
-  end
-
-  describe '#switch_players' do
-    it 'switches players' do
-      prev_players = [game.instance_variable_get(:@current_player), game.instance_variable_get(:@other_player)]
-      game.switch_players
-      new_players = [game.instance_variable_get(:@current_player), game.instance_variable_get(:@other_player)]
-      expect(new_players).to eq(prev_players.reverse)
     end
   end
 
@@ -240,6 +236,15 @@ describe Game do
         expect(game).not_to receive(:switch_players)
         game.game_loop
       end
+    end
+  end
+
+  describe '#switch_players' do
+    it 'switches players' do
+      prev_players = [game.instance_variable_get(:@current_player), game.instance_variable_get(:@other_player)]
+      game.switch_players
+      new_players = [game.instance_variable_get(:@current_player), game.instance_variable_get(:@other_player)]
+      expect(new_players).to eq(prev_players.reverse)
     end
   end
 end
