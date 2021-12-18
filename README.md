@@ -71,6 +71,7 @@ ruby lib/main.rb
 ## What I Learned
 
 - How to write tests with RSpec 
+- How to do TDD with RSpec and Ruby
 - Different ways to test methods based on the inputs and outputs
 - Mocks and Stubs
 - Refactoring the Code
