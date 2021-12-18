@@ -5,7 +5,7 @@ require_relative './board'
 require_relative './player'
 require_relative './display'
 
-# class game
+# Game Class - Game Flow
 class Game
   include Display
 
@@ -18,12 +18,12 @@ class Game
   end
 
   def play
-    introduction
-    rules
+    print_banner
+    print_rules
     update_player_data
     game_loop
-    @board.print_board
     announce_result
+    print_thanks
   end
 
   def update_player_data
@@ -73,9 +73,7 @@ class Game
 
   def game_loop
     loop do
-      print_current_player_data
-      @board.print_board
-      print_column_number_prompt
+      print_loop_data
       @board.add_disc(move, @current_player.marker)
       break if @board.game_over?
 
@@ -99,6 +97,7 @@ class Game
 
   def announce_result
     result = @board.result
+    prepare_screen_for_result
 
     announce_winner(@current_player) if result == :win
     announce_draw if result == :draw

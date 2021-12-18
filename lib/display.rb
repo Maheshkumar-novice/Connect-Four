@@ -3,7 +3,8 @@
 
 require_relative './color'
 
-# display module
+# Module for Display
+# rubocop:disable Metrics/ModuleLength
 module Display
   include Color
 
@@ -17,7 +18,7 @@ module Display
     }[symbol]
   end
 
-  def introduction
+  def print_banner
     puts <<~INTRO
 
       [0;1;35;95m┌─[0;1;31;91m──[0;1;33;93m──[0;1;32;92m──[0;1;36;96m──[0;1;34;94m──[0;1;35;95m──[0;1;31;91m──[0;1;33;93m──[0;1;32;92m──[0;1;36;96m──[0;1;34;94m──[0;1;35;95m──[0;1;31;91m──[0;1;33;93m──[0;1;32;92m──[0;1;36;96m──[0;1;34;94m──[0;1;35;95m──[0;1;31;91m──[0;1;33;93m──[0;1;32;92m──[0;1;36;96m──[0;1;34;94m──[0;1;35;95m─┐[0m
@@ -29,7 +30,7 @@ module Display
     INTRO
   end
 
-  def rules
+  def print_rules
     puts <<~RULES
 
       [0;1;34;94m*[0m [0;1;34;94mTwo[0m [0;1;34;94mplayer[0m [0;1;34;94mga[0;34mme[0m
@@ -59,7 +60,6 @@ module Display
 
   def list_markers
     puts <<~MARKERS
-
       #{@markers.map(&:to_sym).map { |color| color_text(color.to_s.capitalize, color) }.join(' ')}
 
     MARKERS
@@ -82,6 +82,18 @@ module Display
     MARKER
   end
 
+  def print_column_number_prompt
+    puts <<~COLUMN
+
+      [0;1;35;95mEn[0;1;31;91mte[0;1;33;93mr[0m [0;1;32;92ma[0m [0;1;36;96mCo[0;1;34;94mlu[0;1;35;95mmn[0m [0;1;31;91mn[0;1;33;93mum[0;1;32;92mbe[0;1;36;96mr[0m [0;1;34;94m(1[0;1;35;95m-7[0;1;31;91m)[0m
+    COLUMN
+    print_prompt
+  end
+
+  def print_prompt
+    print "\e[0;1;34;94m: \e[0m"
+  end
+
   def print_current_player_data
     puts <<~PLAYER
 
@@ -89,14 +101,6 @@ module Display
       #{color_text(@current_player.name, :green)}(#{color_text(@current_player.marker.capitalize, @current_player.marker.to_sym)})'s move:
 
     PLAYER
-  end
-
-  def print_column_number_prompt
-    puts <<~COLUMN
-
-      [0;1;35;95mEn[0;1;31;91mte[0;1;33;93mr[0m [0;1;32;92ma[0m [0;1;36;96mCo[0;1;34;94mlu[0;1;35;95mmn[0m [0;1;31;91mn[0;1;33;93mum[0;1;32;92mbe[0;1;36;96mr[0m [0;1;34;94m(1[0;1;35;95m-7[0;1;31;91m)[0m
-    COLUMN
-    print_prompt
   end
 
   def print_board
@@ -112,10 +116,30 @@ module Display
     end
   end
 
+  def print_invalid(string)
+    puts color_text("Invalid #{string.capitalize}!\n", :red)
+  end
+
+  def print_loop_data
+    clear_screen
+    print_banner
+    print_current_player_data
+    @board.print_board
+    print_column_number_prompt
+  end
+
+  def print_thanks
+    puts <<~THANKS
+
+      [0;1;35;95mTh[0;1;31;91man[0;1;33;93mks[0m [0;1;32;92mf[0;1;36;96mor[0m [0;1;34;94mp[0;1;35;95mla[0;1;31;91myi[0;1;33;93mng[0m [0;1;32;92m:[0;1;36;96m).[0;1;34;94m..[0;1;35;95m..[0;1;31;91m![0m
+
+    THANKS
+  end
+
   def announce_winner(player)
     puts <<~WINNER
 
-      #{color_text("#{player.name} won!", :green)}
+      #{color_text(player.name.to_s, :green)} #{color_text("(#{player.marker})", player.marker)} #{color_text('Won!', :green)}
     WINNER
   end
 
@@ -126,11 +150,14 @@ module Display
     DRAW
   end
 
-  def print_invalid(string)
-    puts color_text("Invalid #{string.capitalize}!\n", :red)
+  def prepare_screen_for_result
+    clear_screen
+    print_banner
+    @board.print_board
   end
 
-  def print_prompt
-    print "\e[0;1;34;94m: \e[0m"
+  def clear_screen
+    system('clear')
   end
 end
+# rubocop:enable Metrics/ModuleLength

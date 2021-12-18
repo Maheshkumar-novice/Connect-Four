@@ -199,8 +199,7 @@ describe Game do
 
   describe '#game_loop' do
     before do
-      allow(game).to receive(:print_current_player_data)
-      allow(game).to receive(:print_column_number_prompt)
+      allow(game).to receive(:print_loop_data)
       allow(board).to receive(:print_board)
       allow(board).to receive(:add_disc)
     end
