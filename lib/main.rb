@@ -6,7 +6,7 @@ require_relative './game'
 loop do
   Game.new.play
 
-  puts 'Do you want play again? (y)'
+  puts 'Do you want to play again? (y)'
   choice = gets.chomp
   break unless choice.downcase == 'y'
 
