@@ -61,7 +61,7 @@ git clone git@github.com:Maheshkumar-novice/connect-four.git
 ```
 
 ```sh
-cd Connect-Four
+cd connect-four
 ```
 
 ```sh
